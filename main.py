@@ -8,7 +8,6 @@ import datetime
 import logging
 import pathlib
 import re
-import string
 import argparse
 
 color_reset = '\033[0m'
