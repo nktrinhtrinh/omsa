@@ -222,6 +222,54 @@ def manifest_exported_command(command1, keyword1, command2, keyword2, descriptio
         print(color_red)
         logging.info(f"Error: {e}")
 
+
+def masvs_java_command(patterns, command, reference):
+    count = 0
+    for sources_file in java_files:
+        if sources_file.endswith(".java"):
+            # print("Patterns:", patterns)
+            combined_pattern = " -e ".join(patterns)
+            grep_factor = ["grep", command, combined_pattern, sources_file]
+            grep_command = ' '.join(grep_factor)
+            result = subprocess.run(grep_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            keywords = [s.strip("'") for s in patterns]
+            if any(keyword in result.stdout for keyword in keywords):
+                print(color_brown)
+                logging.info(f"{sources_file}")
+                print(color_reset)
+                logging.info(result.stdout)
+                count += 1
+
+    if count > 0:
+        print(color_brown)
+        if reference:
+            logging.info("[!] QuickNote:")
+            logging.info(reference)
+
+def masvs_xml_command(pattern, command, reference):
+    count = 0
+    for sources_file in xml_files:
+        if sources_file.endswith(".xml"):
+            # print("Patterns:", patterns)
+            # combined_pattern = " -e ".join(patterns)
+            grep_factor = ["grep", command, pattern, sources_file]
+            grep_command = ' '.join(grep_factor)
+            result = subprocess.run(grep_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            # keywords = [s.strip("'") for s in patterns]
+            # if any(keyword in result.stdout for keyword in keywords):
+            if pattern in result.stdout:
+                print(color_brown)
+                logging.info(f"{sources_file}")
+                print(color_reset)
+                logging.info(result.stdout)
+                count += 1
+
+    if count > 0:
+        print(color_brown)
+        if reference:
+            logging.info("[!] QuickNote:")
+            logging.info(reference)
+
 def apk_search_core(apk_path):
 
     start_time = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -321,61 +369,22 @@ def apk_search_core(apk_path):
 
     # APK Component Summary
 
-    #SAST - Recursive file reading
-    # global java_files
-    # java_files = glob.glob(os.path.join(jadxpath, "sources", "**", "*.java"), recursive=True)
-    # xml_files = glob.glob(os.path.join(jadxpath, "resources", "**", "*.xml"), recursive=True)
-    # print(color_blue)
-    # logging.info("[+] Let's start the static assessment based on 'OWASP MASVS v2'")
-
-    # search_and_log("openOrCreateDatabase|getWritableDatabase|getReadableDatabase", ".java", "The SQLite Database Storage related instances...", """
-    #     - It is recommended that sensitive data should not be stored in unencrypted SQLite databases, if observed. Please note that, SQLite databases should be password-encrypted.
-    #     - OWASP MASVS: MSTG-STORAGE-2 | CWE-922: Insecure Storage of Sensitive Information
-    #     - https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements
-    # """)
-    # search_and_log(**firebase_data)
+    # SAST - Recursive file reading
+    global java_files, xml_files
+    java_files = glob.glob(os.path.join(jadxpath, "sources", "**", "*.java"), recursive=True)
+    xml_files = glob.glob(os.path.join(jadxpath, "resources", "**", "*.xml"), recursive=True)
+    print(color_blue)
+    logging.info("[+] Let's start the static assessment based on 'OWASP MASVS v2'")
     
     # MASVS V2 - MSTG-STORAGE-2 - SQLite Database
-    # print(color_blue)
-    # logging.info("[+] The SQLite Database Storage related instances...\n")
-    # countSqliteDb = 0
-    # for sources_file in java_files:
-    #     if sources_file.endswith(".java"):
-    #         cmd = f'grep -nr -e "openOrCreateDatabase" -e "getWritableDatabase" -e "getReadableDatabase" "{sources_file}"'
-    #         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    #         if any(keyword in result.stdout for keyword in ["openOrCreateDatabase", "getWritableDatabase", "getReadableDatabase"]):
-    #             print(color_reset)
-    #             logging.info(f"{sources_file}")
-    #             logging.info(result.stdout)
-    #             countSqliteDb += 1
-    # if countSqliteDb > 0:
-    #     print(color_brown)
-    #     logging.info("[!] QuickNote:\n")
-    #     logging.info("    - It is recommended that sensitive data should not be stored in unencrypted SQLite databases, if observed. Please note that, SQLite databases should be password-encrypted.")
-    #     logging.info("[*] Reference:\n")
-    #     logging.info("    - OWASP MASVS: MSTG-STORAGE-2 | CWE-922: Insecure Storage of Sensitive Information")
-    #     logging.info("    - https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements")
+    print(color_blue)
+    logging.info("[+] The SQLite Database Storage related instances...\n")
+    masvs_java_command(["'openOrCreateDatabase'", "'getWritableDatabase'", "'getReadableDatabase'"], "-nr -e", "ehe")
 
     # MASVS V2 - MSTG-STORAGE-2 - Firebase Database
-    # print(color_blue)
-    # print("[+] The Firebase Database instances...\n")
-    # countFireDB = 0
-    # for sources_file in xml_files:
-    #     if sources_file.endswith(".xml"):
-    #         cmd = f'grep -nr -F ".firebaseio.com" "{sources_file}"'
-    #         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-    #         if "firebaseio" in result.stdout:
-    #             print(f"\033[0;33m{sources_file}\033[0m")
-    #             print(result.stdout)
-    #             countFireDB += 1
-    # if countFireDB > 0:
-    #     print("\033[0;36m[!] QuickNote:")
-    #     print("\033[0m")
-    #     print("    - It is recommended that Firebase Realtime database instances should not be misconfigured, if observed. Please note that, An attacker can read the content of the database without any authentication, if rules are set to allow open access or access is not restricted to specific users for specific data sets.")
-    #     print("\033[0;36m[*] Reference:")
-    #     print("\033[0m")
-    #     print("    - OWASP MASVS: MSTG-STORAGE-2 | CWE-200: Exposure of Sensitive Information to an Unauthorized Actor")
-    #     print("    - https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements")
+    print(color_blue)
+    print("[+] The Firebase Database instances...\n")
+    masvs_xml_command("'.firebaseio.com'", "-nr -F", "ehe")
 
 
 
