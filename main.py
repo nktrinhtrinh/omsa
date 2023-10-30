@@ -205,6 +205,23 @@ def manifest_command(command, keyword, description):
         print(color_red)
         logging.info(f"Error: {e}")
 
+def manifest_exported_command(command1, keyword1, command2, keyword2, description):
+    print(color_blue)
+    logging.info(f"{description}")
+    try:
+        grep_factor = ["grep", command1, keyword1, and_manifest_path, "|", "grep", command2, keyword2]
+        grep_command = ' '.join(grep_factor)
+        print(grep_command)
+        result = subprocess.run(grep_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        print(color_reset)
+        logging.info(f"{result.stdout}")
+        if result.returncode != 0:
+            print(color_red)
+            logging.info(f"{result.stderr}")
+    except subprocess.CalledProcessError as e:
+        print(color_red)
+        logging.info(f"Error: {e}")
+
 def apk_search_core(apk_path):
 
     start_time = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -253,80 +270,51 @@ def apk_search_core(apk_path):
     logging.info("[+] Capturing the data from the AndroidManifest file")
 
     # AndroidManifest file - Package name
-    # cmd_and_pkg_nm = f'grep -i "package" "{and_manifest_path}"'
-    # run_command2(cmd_and_pkg_nm, "Package Name")
     manifest_command("-i", "package", "Package Name")
 
     # AndroidManifest file - Package version number
-    # cmd_and_pkg_ver = f'grep -i "versionName" "{and_manifest_path}"'
-    # run_command2(cmd_and_pkg_ver, "Version Name")
     manifest_command("-i", "versionName", "Version Name")
 
     # # AndroidManifest file - minSdkVersion
-    # cmd_and_pkg_minSdkVersion = f'grep -i "minSdkVersion" "{and_manifest_path}"'
-    # run_command2(cmd_and_pkg_minSdkVersion, "minSdkVersion")
     manifest_command("-i", "minSdkVersion", "minSdkVersion")
 
     # # AndroidManifest file - targetSdkVersion
-    # cmd_targetSdkVersion = f'grep -i "targetSdkVersion" "{and_manifest_path}"'
-    # run_command2(cmd_targetSdkVersion, "android:targetSdkVersion")
     manifest_command("-i", "targetSdkVersion", "android:targetSdkVersion")
 
     # # AndroidManifest file - android:networkSecurityConfig
-    # cmd_nwSecConf = f'grep -i "android:networkSecurityConfig=" "{and_manifest_path}"'
-    # run_command2(cmd_nwSecConf, "android:networkSecurityConfig attribute")
     manifest_command("-i", "android:networkSecurityConfig=", "android:networkSecurityConfig attribute")
 
     # # AndroidManifest file - Activities
     print(color_blue)
     logging.info("The Activities...")
-    # cmd_actv = f'grep -ne "<activity" "{and_manifest_path}"'
-    # run_command2(cmd_actv, "Activities")
     manifest_command("-ne", "'<activity'", "Activities")
-
     # # AndroidManifest file - Exported Activities
-    exp_actv = f'grep -ne "<activity" "{and_manifest_path}" | grep -e "android:exported="true""'
-    run_command(exp_actv, "Exported Activities")
-
+    manifest_exported_command("-ne", "'<activity'", "-e", "'android:exported=\"true\"'", "Exported Activities")
 
     # # AndroidManifest file - Content Providers
     print(color_blue)
     logging.info("[+] The Content Providers...")
-    # cmd_cont = f'grep -ne "<provider" "{and_manifest_path}"'
-    # run_command2(cmd_cont, "Content Providers")
     manifest_command("-ne", "'<provider'", "Content Providers")
-
     # # AndroidManifest file - Exported Content Providers
-    exp_cont = f'grep -ne "<provider" "{and_manifest_path}" | grep -e "android:exported="true""'
-    run_command(exp_cont, "Exported Content Providers")
+    manifest_exported_command("-ne", "'<provider'", "-e", "'android:exported=\"true\"'", "Exported Content Providers")
 
     # # AndroidManifest file - Broadcast Receivers
     print(color_blue)
     logging.info("[+] The Broadcast Receivers...")
-    # cmd_brod = f'grep -ne "<receiver" "{and_manifest_path}"'
-    # run_command2(cmd_brod, "Broadcast Receivers")
     manifest_command("-ne", "'<receiver'", "Broadcast Receivers")
-
     # # AndroidManifest file - Exported Broadcast Receivers
-    exp_brod = f'grep -ne "<receiver" "{and_manifest_path}" | grep -e "android:exported="true""'
-    run_command(exp_brod, "Exported Broadcast Receivers")
+    manifest_exported_command("-ne", "'<receiver'", "-e", "'android:exported=\"true\"'", "Exported Broadcast Receivers")
 
     # # AndroidManifest file - Services
     print(color_blue)
     logging.info("[+] The Services...")
-    # cmd_serv = f'grep -ne "<service" "{and_manifest_path}"'
-    # run_command2(cmd_serv, "Services")
     manifest_command("-ne", "package", "Services")
-
     # # AndroidManifest file - Exported Services
-    exp_serv = f'grep -ne "<service" "{and_manifest_path}" | grep -e "android:exported="true""'
-    run_command(exp_serv, "Exported Services")
+    manifest_exported_command("-ne", "'<service'", "-e", "'android:exported=\"true\"'", "Exported Services")
 
     # # AndroidManifest file - Intent Filters
     print(color_blue)
     logging.info("[+] The Intent Filters...")
-    # cmd_intentFilters = f'grep -ne "android.intent." "{and_manifest_path}"'
-    # run_command2(cmd_intentFilters, "Intent Filters")
     manifest_command("-ne", "android.intent.", "Intent Filters")
     print(color_reset)
     logging.info("[+] QuickNote: It is recommended to use Intent Filters securely, if observed.")
