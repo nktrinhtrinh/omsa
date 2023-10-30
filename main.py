@@ -9,6 +9,8 @@ import logging
 import pathlib
 import re
 import argparse
+import glob
+# from masvs1 import sqlite_data, firebase_data
 
 color_reset = '\033[0m'
 color_red = "\033[31m"
@@ -171,17 +173,38 @@ def apk_search_core_log(apk_path):
     logging.info("\n[+] Log-file path: %s", log_file_path)
 
 
-def run_command2(command, description):
-    logging.info(f"\033[34m{description}\033[0m")
+def run_command(command, description):
+    print(color_blue)
+    logging.info(f"{description}")
     try:
         result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        logging.info(f"\033[34m{result.stdout}\033[0m")
+        print(color_reset)
+        logging.info(f"{result.stdout}")
         if result.returncode != 0:
-            logging.info(f"\033[31m{result.stderr}\033[0m")
+            print(color_red)
+            logging.info(f"{result.stderr}")
     except subprocess.CalledProcessError as e:
-        logging.info(f"\033[31mError: {e}\033[0m")
+        print(color_red)
+        logging.info(f"Error: {e}")
 
-#Buged ;v if doesnt use -l => no output
+
+def manifest_command(command, keyword, description):
+    print(color_blue)
+    logging.info(f"{description}")
+    try:
+        grep_factor = ["grep", command, keyword, and_manifest_path]
+        grep_command = ' '.join(grep_factor)
+        print(grep_command)
+        result = subprocess.run(grep_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        print(color_reset)
+        logging.info(f"{result.stdout}")
+        if result.returncode != 0:
+            print(color_red)
+            logging.info(f"{result.stderr}")
+    except subprocess.CalledProcessError as e:
+        print(color_red)
+        logging.info(f"Error: {e}")
+
 def apk_search_core(apk_path):
 
     start_time = time.strftime("%Y-%m-%d %H:%M:%S")
@@ -218,76 +241,155 @@ def apk_search_core(apk_path):
         logging.info(f"[+] APK Hash: SHA256: {file_hash_sha256}")
 
     cmd_dex2jar = f"d2j-dex2jar {apk_path} -f -o {dex2jarpath}"
-    run_command2(cmd_dex2jar, "[+] d2j-dex2jar has started converting APK to Java JAR file")
+    run_command(cmd_dex2jar, "[+] d2j-dex2jar has started converting APK to Java JAR file")
 
     # Decompile the application using JADX
     cmd_jadx = f"jadx --deobf {apk_path} -d {jadxpath}"
-    run_command2(cmd_jadx, "[+] Jadx has started decompiling the application")
+    run_command(cmd_jadx, "[+] Jadx has started decompiling the application")
 
+    global and_manifest_path
     and_manifest_path = f"{jadxpath}resources/AndroidManifest.xml"
-    logging.info("\033[34m[+] Capturing the data from the AndroidManifest file\033[0m")
+    print(color_blue)
+    logging.info("[+] Capturing the data from the AndroidManifest file")
 
     # AndroidManifest file - Package name
-    cmd_and_pkg_nm = f'grep -i "package" "{and_manifest_path}"'
-    run_command2(cmd_and_pkg_nm, "Package Name")
+    # cmd_and_pkg_nm = f'grep -i "package" "{and_manifest_path}"'
+    # run_command2(cmd_and_pkg_nm, "Package Name")
+    manifest_command("-i", "package", "Package Name")
 
     # AndroidManifest file - Package version number
-    cmd_and_pkg_ver = f'grep -i "versionName" "{and_manifest_path}"'
-    run_command2(cmd_and_pkg_ver, "Version Name")
+    # cmd_and_pkg_ver = f'grep -i "versionName" "{and_manifest_path}"'
+    # run_command2(cmd_and_pkg_ver, "Version Name")
+    manifest_command("-i", "versionName", "Version Name")
 
-    # AndroidManifest file - minSdkVersion
-    cmd_and_pkg_minSdkVersion = f'grep -i "minSdkVersion" "{and_manifest_path}"'
-    run_command2(cmd_and_pkg_minSdkVersion, "minSdkVersion")
+    # # AndroidManifest file - minSdkVersion
+    # cmd_and_pkg_minSdkVersion = f'grep -i "minSdkVersion" "{and_manifest_path}"'
+    # run_command2(cmd_and_pkg_minSdkVersion, "minSdkVersion")
+    manifest_command("-i", "minSdkVersion", "minSdkVersion")
 
-    # AndroidManifest file - targetSdkVersion
-    cmd_targetSdkVersion = f'grep -i "targetSdkVersion" "{and_manifest_path}"'
-    run_command2(cmd_targetSdkVersion, "android:targetSdkVersion")
+    # # AndroidManifest file - targetSdkVersion
+    # cmd_targetSdkVersion = f'grep -i "targetSdkVersion" "{and_manifest_path}"'
+    # run_command2(cmd_targetSdkVersion, "android:targetSdkVersion")
+    manifest_command("-i", "targetSdkVersion", "android:targetSdkVersion")
 
-    # AndroidManifest file - android:networkSecurityConfig
-    cmd_nwSecConf = f'grep -i "android:networkSecurityConfig=" "{and_manifest_path}"'
-    run_command2(cmd_nwSecConf, "android:networkSecurityConfig attribute")
+    # # AndroidManifest file - android:networkSecurityConfig
+    # cmd_nwSecConf = f'grep -i "android:networkSecurityConfig=" "{and_manifest_path}"'
+    # run_command2(cmd_nwSecConf, "android:networkSecurityConfig attribute")
+    manifest_command("-i", "android:networkSecurityConfig=", "android:networkSecurityConfig attribute")
 
-    # AndroidManifest file - Activities
-    logging.info("\033[34m[+] The Activities...\033[0m")
-    cmd_actv = f'grep -ne "<activity" "{and_manifest_path}"'
-    run_command2(cmd_actv, "Activities")
+    # # AndroidManifest file - Activities
+    print(color_blue)
+    logging.info("The Activities...")
+    # cmd_actv = f'grep -ne "<activity" "{and_manifest_path}"'
+    # run_command2(cmd_actv, "Activities")
+    manifest_command("-ne", "'<activity'", "Activities")
 
-    # AndroidManifest file - Exported Activities
+    # # AndroidManifest file - Exported Activities
     exp_actv = f'grep -ne "<activity" "{and_manifest_path}" | grep -e "android:exported="true""'
-    run_command2(exp_actv, "Exported Activities")
+    run_command(exp_actv, "Exported Activities")
 
-    # AndroidManifest file - Content Providers
-    logging.info("\033[34m[+] The Content Providers...\033[0m")
-    cmd_cont = f'grep -ne "<provider" "{and_manifest_path}"'
-    run_command2(cmd_cont, "Content Providers")
 
-    # AndroidManifest file - Exported Content Providers
+    # # AndroidManifest file - Content Providers
+    print(color_blue)
+    logging.info("[+] The Content Providers...")
+    # cmd_cont = f'grep -ne "<provider" "{and_manifest_path}"'
+    # run_command2(cmd_cont, "Content Providers")
+    manifest_command("-ne", "'<provider'", "Content Providers")
+
+    # # AndroidManifest file - Exported Content Providers
     exp_cont = f'grep -ne "<provider" "{and_manifest_path}" | grep -e "android:exported="true""'
-    run_command2(exp_cont, "Exported Content Providers")
+    run_command(exp_cont, "Exported Content Providers")
 
-    # AndroidManifest file - Broadcast Receivers
-    logging.info("\033[34m[+] The Broadcast Receivers...\033[0m")
-    cmd_brod = f'grep -ne "<receiver" "{and_manifest_path}"'
-    run_command2(cmd_brod, "Broadcast Receivers")
+    # # AndroidManifest file - Broadcast Receivers
+    print(color_blue)
+    logging.info("[+] The Broadcast Receivers...")
+    # cmd_brod = f'grep -ne "<receiver" "{and_manifest_path}"'
+    # run_command2(cmd_brod, "Broadcast Receivers")
+    manifest_command("-ne", "'<receiver'", "Broadcast Receivers")
 
-    # AndroidManifest file - Exported Broadcast Receivers
+    # # AndroidManifest file - Exported Broadcast Receivers
     exp_brod = f'grep -ne "<receiver" "{and_manifest_path}" | grep -e "android:exported="true""'
-    run_command2(exp_brod, "Exported Broadcast Receivers")
+    run_command(exp_brod, "Exported Broadcast Receivers")
 
-    # AndroidManifest file - Services
-    logging.info("\033[34m[+] The Services...\033[0m")
-    cmd_serv = f'grep -ne "<service" "{and_manifest_path}"'
-    run_command2(cmd_serv, "Services")
+    # # AndroidManifest file - Services
+    print(color_blue)
+    logging.info("[+] The Services...")
+    # cmd_serv = f'grep -ne "<service" "{and_manifest_path}"'
+    # run_command2(cmd_serv, "Services")
+    manifest_command("-ne", "package", "Services")
 
-    # AndroidManifest file - Exported Services
+    # # AndroidManifest file - Exported Services
     exp_serv = f'grep -ne "<service" "{and_manifest_path}" | grep -e "android:exported="true""'
-    run_command2(exp_serv, "Exported Services")
+    run_command(exp_serv, "Exported Services")
 
-    # AndroidManifest file - Intent Filters
-    logging.info("\033[34m[+] The Intent Filters...\033[0m")
-    cmd_intentFilters = f'grep -ne "android.intent." "{and_manifest_path}"'
-    run_command2(cmd_intentFilters, "Intent Filters")
+    # # AndroidManifest file - Intent Filters
+    print(color_blue)
+    logging.info("[+] The Intent Filters...")
+    # cmd_intentFilters = f'grep -ne "android.intent." "{and_manifest_path}"'
+    # run_command2(cmd_intentFilters, "Intent Filters")
+    manifest_command("-ne", "android.intent.", "Intent Filters")
+    print(color_reset)
     logging.info("[+] QuickNote: It is recommended to use Intent Filters securely, if observed.")
+
+    # APK Component Summary
+
+    #SAST - Recursive file reading
+    # global java_files
+    # java_files = glob.glob(os.path.join(jadxpath, "sources", "**", "*.java"), recursive=True)
+    # xml_files = glob.glob(os.path.join(jadxpath, "resources", "**", "*.xml"), recursive=True)
+    # print(color_blue)
+    # logging.info("[+] Let's start the static assessment based on 'OWASP MASVS v2'")
+
+    # search_and_log("openOrCreateDatabase|getWritableDatabase|getReadableDatabase", ".java", "The SQLite Database Storage related instances...", """
+    #     - It is recommended that sensitive data should not be stored in unencrypted SQLite databases, if observed. Please note that, SQLite databases should be password-encrypted.
+    #     - OWASP MASVS: MSTG-STORAGE-2 | CWE-922: Insecure Storage of Sensitive Information
+    #     - https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements
+    # """)
+    # search_and_log(**firebase_data)
+    
+    # MASVS V2 - MSTG-STORAGE-2 - SQLite Database
+    # print(color_blue)
+    # logging.info("[+] The SQLite Database Storage related instances...\n")
+    # countSqliteDb = 0
+    # for sources_file in java_files:
+    #     if sources_file.endswith(".java"):
+    #         cmd = f'grep -nr -e "openOrCreateDatabase" -e "getWritableDatabase" -e "getReadableDatabase" "{sources_file}"'
+    #         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    #         if any(keyword in result.stdout for keyword in ["openOrCreateDatabase", "getWritableDatabase", "getReadableDatabase"]):
+    #             print(color_reset)
+    #             logging.info(f"{sources_file}")
+    #             logging.info(result.stdout)
+    #             countSqliteDb += 1
+    # if countSqliteDb > 0:
+    #     print(color_brown)
+    #     logging.info("[!] QuickNote:\n")
+    #     logging.info("    - It is recommended that sensitive data should not be stored in unencrypted SQLite databases, if observed. Please note that, SQLite databases should be password-encrypted.")
+    #     logging.info("[*] Reference:\n")
+    #     logging.info("    - OWASP MASVS: MSTG-STORAGE-2 | CWE-922: Insecure Storage of Sensitive Information")
+    #     logging.info("    - https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements")
+
+    # MASVS V2 - MSTG-STORAGE-2 - Firebase Database
+    # print(color_blue)
+    # print("[+] The Firebase Database instances...\n")
+    # countFireDB = 0
+    # for sources_file in xml_files:
+    #     if sources_file.endswith(".xml"):
+    #         cmd = f'grep -nr -F ".firebaseio.com" "{sources_file}"'
+    #         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+    #         if "firebaseio" in result.stdout:
+    #             print(f"\033[0;33m{sources_file}\033[0m")
+    #             print(result.stdout)
+    #             countFireDB += 1
+    # if countFireDB > 0:
+    #     print("\033[0;36m[!] QuickNote:")
+    #     print("\033[0m")
+    #     print("    - It is recommended that Firebase Realtime database instances should not be misconfigured, if observed. Please note that, An attacker can read the content of the database without any authentication, if rules are set to allow open access or access is not restricted to specific users for specific data sets.")
+    #     print("\033[0;36m[*] Reference:")
+    #     print("\033[0m")
+    #     print("    - OWASP MASVS: MSTG-STORAGE-2 | CWE-200: Exposure of Sensitive Information to an Unauthorized Actor")
+    #     print("    - https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements")
+
+
 
 
 
