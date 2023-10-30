@@ -38,7 +38,7 @@ def apk_search_intro_func():
     print(color_reset)
     # print("[+] APKSearch - a comprehensive static code analysis tool for Android apps")
     print("[+] Based on: OWASP MASVS v2.0.0 - https://mas.owasp.org/MASVS/")
-    print("[+] Author: trinhnk17 && vutq8")
+    print("[+] Author: trinhnk17 && vutq13")
     # print("[*] Connect: Please do write to us for any suggestions/feedback.")
 
 
