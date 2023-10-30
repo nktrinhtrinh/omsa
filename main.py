@@ -183,9 +183,6 @@ def run_command2(command, description):
 
 #Buged ;v if doesnt use -l => no output
 def apk_search_core(apk_path):
-    def run_command(command):
-        result = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        return result.stdout
 
     start_time = time.strftime("%Y-%m-%d %H:%M:%S")
     logging.info(f"\n[+] Scan has been started at: {start_time}")
