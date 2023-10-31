@@ -1,0 +1,30 @@
+[
+    {
+        "command1":"-ne",
+        "keyword1":"'<activity'",
+        "command2":"-e",
+        "keyword2":"'android:exported=\"true\"'",
+        "description":"Exported Activities"
+    },
+    {
+        "command1":"-ne",
+        "keyword1":"'<provider'",
+        "command2":"-e",
+        "keyword2":"'android:exported=\"true\"'",
+        "description":"Exported Content Providers"
+    },
+    {
+        "command1":"-ne",
+        "keyword1":"'<receiver'",
+        "command2":"-e",
+        "keyword2":"'android:exported=\"true\"'",
+        "description":"Exported Broadcast Receivers"
+    },
+    {
+        "command1":"-ne",
+        "keyword1":"'<service'",
+        "command2":"-e",
+        "keyword2":"'android:exported=\"true\"'",
+        "description":"Exported Services"
+    }
+]

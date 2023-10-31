@@ -1,0 +1,52 @@
+[
+    {
+        "command":"-i",
+        "keyword":"package",
+        "description":"Package Name"
+    },
+    {
+        "command":"-i",
+        "keyword":"versionName",
+        "description":"Version Name"
+    },
+    {
+        "command":"-i",
+        "keyword":"minSdkVersion",
+        "description":"minSdkVersion"
+    },
+    {
+        "command":"-i",
+        "keyword":"targetSdkVersion",
+        "description":"android:targetSdkVersion"
+    },
+    {
+        "command":"-i",
+        "keyword":"android:networkSecurityConfig=",
+        "description":"android:networkSecurityConfig attribute"
+    },
+    {
+        "command":"-ne",
+        "keyword":"'<activity'",
+        "description":"Activities"
+    },
+    {
+        "command":"-ne",
+        "keyword":"'<provider'",
+        "description":"Content Providers"
+    },
+    {
+        "command":"-ne",
+        "keyword":"'<receiver'",
+        "description":"Broadcast Receivers"
+    },
+    {
+        "command":"-ne",
+        "keyword":"'<service'",
+        "description":"Services"
+    },
+    {
+        "command":"-ne",
+        "keyword":"android.intent.",
+        "description":"Intent Filters"
+    }
+]

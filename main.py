@@ -10,7 +10,7 @@ import pathlib
 import re
 import argparse
 import glob
-# from masvs1 import sqlite_data, firebase_data
+import json
 
 color_reset = '\033[0m'
 color_red = "\033[31m"
@@ -43,7 +43,6 @@ def apk_search_intro_func():
     print("[+] Author: trinhnk17 && vutq13")
     # print("[*] Connect: Please do write to us for any suggestions/feedback.")
 
-
 def apk_search_basic_req_checks():
     # OS type check
     if platform.system() != "Linux":
@@ -67,7 +66,6 @@ def apk_search_basic_req_checks():
             elif utility == "d2j-dex2jar":
                 print("\n[!] dex2jar has not been observed. \n[!] Kindly install it first! \n[!] Exiting...")
             sys.exit(0)
-
 
 def apk_search_help():
     print(color_brown)
@@ -93,7 +91,6 @@ def apk_search_help():
     print(color_reset)
     print("\t - Tested on Linux only!")
     print("\t - Keep tools such as JADX, dex2jar, Python, grep, etc. installed")
-
 
 def main():
     # APKsearch basic requirement checks
@@ -124,35 +121,34 @@ def main():
             logging.basicConfig(level=logging.DEBUG, format='%(message)s')
         print("APK path: ", apk_path)
         apk_search_core(apk_path)
-    # elif args.folder:
-    #     if not os.path.exists(apk_path):
-    #         print("\n[!] Given file-path '{}' does not exist. \n[!] Kindly verify the path/filename! \n[!] Exiting...".format(apk_path))
-    #         sys.exit(0)
+    elif args.folder:
+        if not os.path.exists(apk_path):
+            print("\n[!] Given file-path '{}' does not exist. \n[!] Kindly verify the path/filename! \n[!] Exiting...".format(apk_path))
+            sys.exit(0)
 
-    #     apk_files = []
-    #     count_apk = 0
+        apk_files = []
+        count_apk = 0
 
-    #     for root, dirs, files in os.walk(apk_path):
-    #         for file in files:
-    #             if file.endswith(".apk"):
-    #                 apk_files.append(os.path.join(root, file))
-    #                 count_apk += 1
+        for root, dirs, files in os.walk(apk_path):
+            for file in files:
+                if file.endswith(".apk"):
+                    apk_files.append(os.path.join(root, file))
+                    count_apk += 1
 
-    #     print(color_brown)
-    #     print("\n==>> Total number of APK files: {} \n\n".format(count_apk))
-    #     print(color_reset)
-    #     if count_apk == 0:
-    #         print("[!] No APK files found in the given directory. \n[!] Kindly verify the path/directory! \n[!] Exiting...")
-    #         sys.exit(0)
+        print(color_brown)
+        print("\n==>> Total number of APK files: {} \n\n".format(count_apk))
+        print(color_reset)
+        if count_apk == 0:
+            print("[!] No APK files found in the given directory. \n[!] Kindly verify the path/directory! \n[!] Exiting...")
+            sys.exit(0)
 
-    #     print(color_brown)
-    #     print("==>> List of the APK files:")
-    #     print(color_reset)
-    #     count_apk_files = 0
-    #     for apk_file in apk_files:
-    #         count_apk_files += 1
-    #         print("    ", count_apk_files, os.path.basename(apk_file))
-
+        print(color_brown)
+        print("==>> List of the APK files:")
+        print(color_reset)
+        count_apk_files = 0
+        for apk_file in apk_files:
+            count_apk_files += 1
+            print("    ", count_apk_files, os.path.basename(apk_file))
 
 # Logging function
 def apk_search_core_log(apk_path):
@@ -172,7 +168,6 @@ def apk_search_core_log(apk_path):
 
     logging.info("\n[+] Log-file path: %s", log_file_path)
 
-
 def run_command(command, description):
     print(color_blue)
     logging.info(f"{description}")
@@ -186,7 +181,6 @@ def run_command(command, description):
     except subprocess.CalledProcessError as e:
         print(color_red)
         logging.info(f"Error: {e}")
-
 
 def manifest_command(command, keyword, description):
     print(color_blue)
@@ -221,7 +215,6 @@ def manifest_exported_command(command1, keyword1, command2, keyword2, descriptio
     except subprocess.CalledProcessError as e:
         print(color_red)
         logging.info(f"Error: {e}")
-
 
 def masvs_java_command(patterns, command, reference):
     count = 0
@@ -317,55 +310,18 @@ def apk_search_core(apk_path):
     print(color_blue)
     logging.info("[+] Capturing the data from the AndroidManifest file")
 
-    # AndroidManifest file - Package name
-    manifest_command("-i", "package", "Package Name")
+    with open('manifest.json', 'r') as json_file:
+        data = json.load(json_file)
+    for item in data:
+        manifest_command(item['command'], item['keyword'], item['description'])
 
-    # AndroidManifest file - Package version number
-    manifest_command("-i", "versionName", "Version Name")
-
-    # # AndroidManifest file - minSdkVersion
-    manifest_command("-i", "minSdkVersion", "minSdkVersion")
-
-    # # AndroidManifest file - targetSdkVersion
-    manifest_command("-i", "targetSdkVersion", "android:targetSdkVersion")
-
-    # # AndroidManifest file - android:networkSecurityConfig
-    manifest_command("-i", "android:networkSecurityConfig=", "android:networkSecurityConfig attribute")
-
-    # # AndroidManifest file - Activities
-    print(color_blue)
-    logging.info("The Activities...")
-    manifest_command("-ne", "'<activity'", "Activities")
-    # # AndroidManifest file - Exported Activities
-    manifest_exported_command("-ne", "'<activity'", "-e", "'android:exported=\"true\"'", "Exported Activities")
-
-    # # AndroidManifest file - Content Providers
-    print(color_blue)
-    logging.info("[+] The Content Providers...")
-    manifest_command("-ne", "'<provider'", "Content Providers")
-    # # AndroidManifest file - Exported Content Providers
-    manifest_exported_command("-ne", "'<provider'", "-e", "'android:exported=\"true\"'", "Exported Content Providers")
-
-    # # AndroidManifest file - Broadcast Receivers
-    print(color_blue)
-    logging.info("[+] The Broadcast Receivers...")
-    manifest_command("-ne", "'<receiver'", "Broadcast Receivers")
-    # # AndroidManifest file - Exported Broadcast Receivers
-    manifest_exported_command("-ne", "'<receiver'", "-e", "'android:exported=\"true\"'", "Exported Broadcast Receivers")
-
-    # # AndroidManifest file - Services
-    print(color_blue)
-    logging.info("[+] The Services...")
-    manifest_command("-ne", "package", "Services")
-    # # AndroidManifest file - Exported Services
-    manifest_exported_command("-ne", "'<service'", "-e", "'android:exported=\"true\"'", "Exported Services")
-
-    # # AndroidManifest file - Intent Filters
-    print(color_blue)
-    logging.info("[+] The Intent Filters...")
-    manifest_command("-ne", "android.intent.", "Intent Filters")
     print(color_reset)
     logging.info("[+] QuickNote: It is recommended to use Intent Filters securely, if observed.")
+
+    with open('manifest_exported.json', 'r') as json_file:
+        data = json.load(json_file)
+    for item in data:
+        manifest_exported_command(item['command1'], item['keyword1'], item['command2'], item['keyword2'], item['description'])
 
     # APK Component Summary
 
@@ -376,15 +332,17 @@ def apk_search_core(apk_path):
     print(color_blue)
     logging.info("[+] Let's start the static assessment based on 'OWASP MASVS v2'")
     
+    with open('masvs1.json', 'r') as json_file:
+        data = json.load(json_file)
     # MASVS V2 - MSTG-STORAGE-2 - SQLite Database
     print(color_blue)
     logging.info("[+] The SQLite Database Storage related instances...\n")
-    masvs_java_command(["'openOrCreateDatabase'", "'getWritableDatabase'", "'getReadableDatabase'"], "-nr -e", "ehe")
+    masvs_java_command(data['patterns'], data['command'], data['reference'])
 
     # MASVS V2 - MSTG-STORAGE-2 - Firebase Database
-    print(color_blue)
-    print("[+] The Firebase Database instances...\n")
-    masvs_xml_command("'.firebaseio.com'", "-nr -F", "ehe")
+    # print(color_blue)
+    # print("[+] The Firebase Database instances...\n")
+    # masvs_xml_command("'.firebaseio.com'", "-nr -F", "ehe")
 
 
 
@@ -392,4 +350,3 @@ def apk_search_core(apk_path):
 
 if __name__ == "__main__":
     main()
-
