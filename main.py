@@ -23,33 +23,34 @@ color_cyan_bold = "\033[1;36m"
 color_purple = "\033[1;35m"
 
 
-def apk_search_intro_func():
+def omsa_intro_func():
     print(color_red_bold)
     print(
         '''
-         _    ____  _  ______                      _      
-        / \  |  _ \| |/ / ___|  ___  __ _ _ __ ___| |__   
-       / _ \ | |_) | ' /\___ \ / _ \/ _` | '__/ __| '_ \  
-      / ___ \|  __/| . \ ___) |  __| (_| | | | (__| | | | 
-     /_/   \_|_|   |_|\_|____/ \___|\__,_|_|  \___|_| |_| 
-                                                                                           
-    -----------------------------------------------------
-    OWASP MASVS v.2 Static Analyzer for Android Application                               
+     _______    __   __    _______    _______ 
+    |       |  |  |_|  |  |       | _|_____  |
+    |   _   |  |       |  |  _____| |_____|  |__
+    |  | |  |  |       |  | |_____   |       |  |
+    |  |_|  |  |       |  |_____  |  |       |  |
+    |       |  | ||_|| |   _____| |  |   _   |__|
+    |_______|  |_|   |_|  |_______|  |__| |__|                                                                           
+    --------------------------------------------------------
+    OWASP MASVS v.2 Static Analyzer for Android Applications                               
     '''
     )
     print(color_reset)
-    # print("[+] APKSearch - a comprehensive static code analysis tool for Android apps")
+    # print("[+] OMSA - a comprehensive static code analysis tool for Android apps")
     print("[+] Based on: OWASP MASVS v2.0.0 - https://mas.owasp.org/MASVS/")
     print("[+] Author: trinhnk17 && vutq13")
     # print("[*] Connect: Please do write to us for any suggestions/feedback.")
 
-def apk_search_basic_req_checks():
+def omsa_basic_req_checks():
     # OS type check
     if platform.system() != "Linux":
-        apk_search_intro_func()
-        print("\n[+] Checking if APKSearch is being executed on Linux OS or not...")
+        omsa_intro_func()
+        print("\n[+] Checking if OMSA is being executed on Linux OS or not...")
         print("[!] Linux OS has not been identified! \n[!] Exiting...")
-        print("\n[+] It is recommended to execute APKsearch on Kali Linux OS.")
+        print("\n[+] It is recommended to execute OMSA on Kali Linux OS.")
         sys.exit(0)
 
     # Grep/jadx/dex2jar filepath check
@@ -58,7 +59,7 @@ def apk_search_basic_req_checks():
         try:
             subprocess.check_output(["which", utility])
         except subprocess.CalledProcessError:
-            apk_search_intro_func()
+            omsa_intro_func()
             if utility == "grep":
                 print("\n[!] grep utility has not been observed. \n[!] Kindly install it first! \n[!] Exiting...")
             elif utility == "jadx":
@@ -67,11 +68,11 @@ def apk_search_basic_req_checks():
                 print("\n[!] dex2jar has not been observed. \n[!] Kindly install it first! \n[!] Exiting...")
             sys.exit(0)
 
-def apk_search_help():
+def omsa_help():
     print(color_brown)
-    print("\n    APKSearch Usage:")
+    print("\n    OMSA Usage:")
     print(color_reset)
-    print("\t  python APKSearch.py [options] {.apk file}")
+    print("\t  python OMSA.py [options] {.apk file}")
     print(color_brown)
     print("\n    Options:")
     print(color_reset)
@@ -82,10 +83,10 @@ def apk_search_help():
     print(color_brown)
     print("\n    Examples:")
     print(color_reset)
-    print("\t APKsearch.py -p /Downloads/android_app.apk")
-    print("\t APKsearch.py -p /Downloads/android_app.apk -l")
-    # print("\t APKsearch.py -m /Downloads/android_apps/")
-    # print("\t APKsearch.py -m /Downloads/android_apps/ -l")
+    print("\t OMSA.py -p /Downloads/android_app.apk")
+    print("\t OMSA.py -p /Downloads/android_app.apk -l")
+    # print("\t OMSA.py -m /Downloads/android_apps/")
+    # print("\t OMSA.py -m /Downloads/android_apps/ -l")
     print(color_brown)
     print("\n    Note:")
     print(color_reset)
@@ -93,13 +94,14 @@ def apk_search_help():
     print("\t - Keep tools such as JADX, dex2jar, Python, grep, etc. installed")
 
 def main():
-    # APKsearch basic requirement checks
-    apk_search_basic_req_checks()
+    # OMSA basic requirement checks
+    omsa_basic_req_checks()
+    omsa_intro_func()
 
     # Function processing command
     if len(sys.argv[1:]) == 0 or sys.argv[1] == "-h":
-        apk_search_intro_func()
-        apk_search_help()
+        omsa_intro_func()
+        omsa_help()
         sys.exit(0)
 
     parser = argparse.ArgumentParser()
@@ -116,11 +118,11 @@ def main():
             sys.exit(0)
         if args.log:
             print("\nStart to logging the process...")
-            apk_search_core_log(apk_path)
+            omsa_core_log(apk_path)
         else:
             logging.basicConfig(level=logging.DEBUG, format='%(message)s')
-        print("APK path: ", apk_path)
-        apk_search_core(apk_path)
+        print("\n[+] APK path: ", apk_path)
+        omsa_core(apk_path)
     elif args.folder:
         if not os.path.exists(apk_path):
             print("\n[!] Given file-path '{}' does not exist. \n[!] Kindly verify the path/filename! \n[!] Exiting...".format(apk_path))
@@ -150,7 +152,7 @@ def main():
             count_apk_files += 1
             print("    ", count_apk_files, os.path.basename(apk_file))
 
-def apk_search_core_log(apk_path):
+def omsa_core_log(apk_path):
     the_time = datetime.datetime.now()
     time_year = str(the_time.year)
     time_month = the_time.month
@@ -160,7 +162,7 @@ def apk_search_core_log(apk_path):
     time_second = the_time.second
     ctime = f"{time_year}-{time_month:02d}-{time_day:02d}_{time_hour:02d}-{time_minute:02d}-{time_second:02d}"
     apk_file_name = pathlib.Path(apk_path).stem
-    log_file_path = os.path.join(os.path.dirname(apk_path), f"APKsearch_{apk_file_name}_{ctime}.txt")
+    log_file_path = os.path.join(os.path.dirname(apk_path), f"OMSA_{apk_file_name}_{ctime}.txt")
 
     logging.basicConfig(filename=log_file_path, level=logging.DEBUG, format='%(message)s')
     logging.getLogger().addHandler(logging.StreamHandler())
@@ -222,33 +224,6 @@ def manifest_exported_command(command1, keyword1, command2, keyword2, descriptio
         logging.info(f"----> Total {description} are: {line_count}\n")
         logging.info(f"----> QuickNote: {note}\n")
 
-# def masvs_java_command(description, patterns, command, note, reference):
-#     print(color_blue)
-#     logging.info("\n==>",description,"\n")
-#     count = 0
-#     for sources_file in java_files:
-#         if sources_file.endswith(".java"):
-#             # if not isinstance(patterns, str):
-#             #     if "-e" in command:
-#             #         combined_pattern = " -e ".join(patterns)
-#             # else: combined_pattern = patterns
-#             combined_pattern = patterns
-#             grep_factor = ["grep", command, combined_pattern, sources_file]
-#             grep_command = ' '.join(grep_factor)
-#             print(grep_command)
-#             result = subprocess.run(grep_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-#             keywords = [s.strip("'") for s in patterns]
-#             if any(keyword in result.stdout for keyword in keywords):
-#                 print(color_brown)
-#                 logging.info(f"{sources_file}")
-#                 print(color_reset)
-#                 logging.info(result.stdout)
-#                 count += 1
-
-#     if count > 0:
-#         print(color_brown)
-#         logging.info("[!] QuickNote:", note)
-#         logging.info("\n[*] Reference:",reference)
 
 def masvs_java_command(description, patterns, command, note, reference):
     print(color_blue)
@@ -286,31 +261,43 @@ def masvs_java_command(description, patterns, command, note, reference):
         logging.info(f"[!] QuickNote: {note}")
         logging.info(f"\n[*] Reference: {reference}")
 
-def masvs_xml_command(pattern, command, reference):
+def masvs_xml_command(description, patterns, command, note, reference):
+    print(color_blue)
+    logging.info(f"\n==> {description}\n")
     count = 0
     for sources_file in xml_files:
         if sources_file.endswith(".xml"):
-            # print("Patterns:", patterns)
-            # combined_pattern = " -e ".join(patterns)
-            grep_factor = ["grep", command, pattern, sources_file]
+            if isinstance(patterns, list) and "-e" in command:
+                combined_pattern = " -e ".join(patterns)
+                keywords = [s.strip("'") for s in patterns]
+            else:
+                combined_pattern = patterns
+                keywords = patterns.replace("'", '')
+
+            grep_factor = ["grep", command, combined_pattern, sources_file]
             grep_command = ' '.join(grep_factor)
+            # print(grep_command)
             result = subprocess.run(grep_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-            # keywords = [s.strip("'") for s in patterns]
-            # if any(keyword in result.stdout for keyword in keywords):
-            if pattern in result.stdout:
+            
+            if isinstance(keywords, list) and any(keyword in result.stdout for keyword in keywords):
                 print(color_brown)
                 logging.info(f"{sources_file}")
                 print(color_reset)
                 logging.info(result.stdout)
                 count += 1
-
+            elif isinstance(keywords, str) and keywords in result.stdout:
+                print(color_brown)
+                logging.info(f"{sources_file}")
+                print(color_reset)
+                logging.info(result.stdout)
+                count += 1
+        
     if count > 0:
         print(color_brown)
-        if reference:
-            logging.info("[!] QuickNote:")
-            logging.info(reference)
+        logging.info(f"[!] QuickNote: {note}")
+        logging.info(f"\n[*] Reference: {reference}")
 
-def apk_search_core(apk_path):
+def omsa_core(apk_path):
 
     start_time = time.strftime("%Y-%m-%d %H:%M:%S")
     logging.info(f"\n[+] Scan has been started at: {start_time}")
@@ -379,12 +366,11 @@ def apk_search_core(apk_path):
     
     # MASVS V2 - MSTG-STORAGE
     print(color_blue_bold)
-    logging.info("[+] MASVS V2 - MSTG-STORAGE")
+    logging.info("[+] MASVS V2.0.0 - MSTG-STORAGE")
     with open('masvs1_java.json', 'r') as json_file:
         data = json.load(json_file)
     for item in data:
         masvs_java_command(item['description'], item['patterns'], item['command'], item['note'], item['reference'])
-    # masvs_java_command(data['description'], data['patterns'], data['command'])
 
 
 
