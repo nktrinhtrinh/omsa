@@ -1,0 +1,7 @@
+{
+    "description":"The Keyboard Cache instances...",
+    "patterns":"':inputType='",
+    "command":"-nr -e",
+    "note":"    - It is recommended to set the android input type as textNoSuggestions for any sensitive data, if observed.",
+    "reference":"'- OWASP MASVS: MSTG-STORAGE-2 | CWE-922: Insecure Storage of Sensitive Information\n- https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements'"
+}

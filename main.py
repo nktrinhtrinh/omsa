@@ -227,7 +227,7 @@ def manifest_exported_command(command1, keyword1, command2, keyword2, descriptio
 
 def masvs_java_command(description, patterns, command, note, reference):
     print(color_blue)
-    logging.info(f"\n==> {description}\n")
+    logging.info(f"==> {description}")
     count = 0
     for sources_file in java_files:
         if sources_file.endswith(".java"):
@@ -367,10 +367,27 @@ def omsa_core(apk_path):
     # MASVS V2 - MSTG-STORAGE
     print(color_blue_bold)
     logging.info("[+] MASVS V2.0.0 - MSTG-STORAGE")
-    with open('masvs1_java.json', 'r') as json_file:
+    print(color_cyan_bold)
+    logging.info("[+] MSTG-STORAGE-1: The app securely stores sensitive data.")
+    print(color_reset)
+    with open('storage1_java.json', 'r') as json_file:
         data = json.load(json_file)
     for item in data:
         masvs_java_command(item['description'], item['patterns'], item['command'], item['note'], item['reference'])
+    with open('storage1_xml.json', 'r') as json_file:
+        data = json.load(json_file)
+    masvs_xml_command(data['description'], data['patterns'], data['command'], data['note'], data['reference'])
+    
+    print(color_cyan_bold)
+    logging.info("\n[+] MSTG-STORAGE-2: The app prevents leakage of sensitive data.")
+    print(color_reset)
+    with open('storage2_java.json', 'r') as json_file:
+        data = json.load(json_file)
+    for item in data:
+        masvs_java_command(item['description'], item['patterns'], item['command'], item['note'], item['reference'])
+    with open('storage2_xml.json', 'r') as json_file:
+        data = json.load(json_file)
+    masvs_xml_command(data['description'], data['patterns'], data['command'], data['note'], data['reference'])
 
 
 

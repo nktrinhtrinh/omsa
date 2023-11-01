@@ -1,0 +1,8 @@
+{
+    "description":"The Firebase Database instances...",
+    "patterns":"'.firebaseio.com'",
+    "command":"-nr -F",
+    "note":"'It is recommended to use shared preferences appropriately, if observed.\nPlease note that, Misuse of the SharedPreferences API can often lead to the exposure of sensitive data.\nMODE_WORLD_READABLE allows all applications to access and read the file contents.\nApplications compiled with an android:targetSdkVersion value less than 17 may be affected, if they run on an OS version that was released before Android 4.2 (API level 17).'",
+    "reference":"'- OWASP MASVS: MSTG-STORAGE-2 | CWE-922: Insecure Storage of Sensitive Information\n- https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements'"
+    
+}
