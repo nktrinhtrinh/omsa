@@ -2,51 +2,61 @@
     {
         "command":"-i",
         "keyword":"package",
-        "description":"Package Name"
+        "description":"Package Name",
+        "note":""
     },
     {
         "command":"-i",
         "keyword":"versionName",
-        "description":"Version Name"
+        "description":"Version Name",
+        "note":""
     },
     {
         "command":"-i",
         "keyword":"minSdkVersion",
-        "description":"minSdkVersion"
+        "description":"minSdkVersion",
+        "note":""
     },
     {
         "command":"-i",
         "keyword":"targetSdkVersion",
-        "description":"android:targetSdkVersion"
+        "description":"android:targetSdkVersion",
+        "note":""
     },
     {
         "command":"-i",
         "keyword":"android:networkSecurityConfig=",
-        "description":"android:networkSecurityConfig attribute"
+        "description":"android:networkSecurityConfig attribute",
+        "note":""
     },
     {
         "command":"-ne",
         "keyword":"'<activity'",
-        "description":"Activities"
+        "description":"Activities",
+        "note":""
     },
     {
         "command":"-ne",
         "keyword":"'<provider'",
-        "description":"Content Providers"
+        "description":"Content Providers",
+        "note":""
     },
     {
         "command":"-ne",
         "keyword":"'<receiver'",
-        "description":"Broadcast Receivers"
+        "description":"Broadcast Receivers",
+        "note":""
     },
     {
         "command":"-ne",
         "keyword":"'<service'",
-        "description":"Services"
+        "description":"Services",
+        "note":""
     },
     {
         "command":"-ne",
         "keyword":"android.intent.",
-        "description":"Intent Filters"
+        "description":"Intent Filters",
+        "note":"It is recommended to use Intent Filters securely, if observed."
     }
 ]

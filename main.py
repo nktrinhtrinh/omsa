@@ -150,7 +150,6 @@ def main():
             count_apk_files += 1
             print("    ", count_apk_files, os.path.basename(apk_file))
 
-# Logging function
 def apk_search_core_log(apk_path):
     the_time = datetime.datetime.now()
     time_year = str(the_time.year)
@@ -182,13 +181,12 @@ def run_command(command, description):
         print(color_red)
         logging.info(f"Error: {e}")
 
-def manifest_command(command, keyword, description):
+def manifest_command(command, keyword, description, note):
     print(color_blue)
-    logging.info(f"{description}")
+    logging.info(f"[+] {description}")
     try:
         grep_factor = ["grep", command, keyword, and_manifest_path]
         grep_command = ' '.join(grep_factor)
-        print(grep_command)
         result = subprocess.run(grep_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         print(color_reset)
         logging.info(f"{result.stdout}")
@@ -198,46 +196,95 @@ def manifest_command(command, keyword, description):
     except subprocess.CalledProcessError as e:
         print(color_red)
         logging.info(f"Error: {e}")
+    if note != "":
+        print(color_brown)
+        logging.info(f"----> QuickNote: {note}\n")
 
-def manifest_exported_command(command1, keyword1, command2, keyword2, description):
+def manifest_exported_command(command1, keyword1, command2, keyword2, description, note):
     print(color_blue)
-    logging.info(f"{description}")
+    logging.info(f"[+] {description}")
     try:
         grep_factor = ["grep", command1, keyword1, and_manifest_path, "|", "grep", command2, keyword2]
         grep_command = ' '.join(grep_factor)
-        print(grep_command)
         result = subprocess.run(grep_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         print(color_reset)
         logging.info(f"{result.stdout}")
+        stdout_lines = result.stdout.split('\n')
+        line_count = len([line for line in stdout_lines if line.strip()])
         if result.returncode != 0:
             print(color_red)
             logging.info(f"{result.stderr}")
     except subprocess.CalledProcessError as e:
         print(color_red)
         logging.info(f"Error: {e}")
+    if line_count > 0:
+        print(color_brown)
+        logging.info(f"----> Total {description} are: {line_count}\n")
+        logging.info(f"----> QuickNote: {note}\n")
 
-def masvs_java_command(patterns, command, reference):
+# def masvs_java_command(description, patterns, command, note, reference):
+#     print(color_blue)
+#     logging.info("\n==>",description,"\n")
+#     count = 0
+#     for sources_file in java_files:
+#         if sources_file.endswith(".java"):
+#             # if not isinstance(patterns, str):
+#             #     if "-e" in command:
+#             #         combined_pattern = " -e ".join(patterns)
+#             # else: combined_pattern = patterns
+#             combined_pattern = patterns
+#             grep_factor = ["grep", command, combined_pattern, sources_file]
+#             grep_command = ' '.join(grep_factor)
+#             print(grep_command)
+#             result = subprocess.run(grep_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+#             keywords = [s.strip("'") for s in patterns]
+#             if any(keyword in result.stdout for keyword in keywords):
+#                 print(color_brown)
+#                 logging.info(f"{sources_file}")
+#                 print(color_reset)
+#                 logging.info(result.stdout)
+#                 count += 1
+
+#     if count > 0:
+#         print(color_brown)
+#         logging.info("[!] QuickNote:", note)
+#         logging.info("\n[*] Reference:",reference)
+
+def masvs_java_command(description, patterns, command, note, reference):
+    print(color_blue)
+    logging.info(f"\n==> {description}\n")
     count = 0
     for sources_file in java_files:
         if sources_file.endswith(".java"):
-            # print("Patterns:", patterns)
-            combined_pattern = " -e ".join(patterns)
+            if isinstance(patterns, list) and "-e" in command:
+                combined_pattern = " -e ".join(patterns)
+                keywords = [s.strip("'") for s in patterns]
+            else:
+                combined_pattern = patterns
+                keywords = patterns.replace("'", '')
+
             grep_factor = ["grep", command, combined_pattern, sources_file]
             grep_command = ' '.join(grep_factor)
+            # print(grep_command)
             result = subprocess.run(grep_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-            keywords = [s.strip("'") for s in patterns]
-            if any(keyword in result.stdout for keyword in keywords):
+            
+            if isinstance(keywords, list) and any(keyword in result.stdout for keyword in keywords):
                 print(color_brown)
                 logging.info(f"{sources_file}")
                 print(color_reset)
                 logging.info(result.stdout)
                 count += 1
-
+            elif isinstance(keywords, str) and keywords in result.stdout:
+                print(color_brown)
+                logging.info(f"{sources_file}")
+                print(color_reset)
+                logging.info(result.stdout)
+                count += 1
+        
     if count > 0:
         print(color_brown)
-        if reference:
-            logging.info("[!] QuickNote:")
-            logging.info(reference)
+        logging.info(f"[!] QuickNote: {note}")
+        logging.info(f"\n[*] Reference: {reference}")
 
 def masvs_xml_command(pattern, command, reference):
     count = 0
@@ -313,15 +360,13 @@ def apk_search_core(apk_path):
     with open('manifest.json', 'r') as json_file:
         data = json.load(json_file)
     for item in data:
-        manifest_command(item['command'], item['keyword'], item['description'])
+        manifest_command(item['command'], item['keyword'], item['description'], item['note'])
 
-    print(color_reset)
-    logging.info("[+] QuickNote: It is recommended to use Intent Filters securely, if observed.")
 
     with open('manifest_exported.json', 'r') as json_file:
         data = json.load(json_file)
     for item in data:
-        manifest_exported_command(item['command1'], item['keyword1'], item['command2'], item['keyword2'], item['description'])
+        manifest_exported_command(item['command1'], item['keyword1'], item['command2'], item['keyword2'], item['description'], item['note'])
 
     # APK Component Summary
 
@@ -332,17 +377,15 @@ def apk_search_core(apk_path):
     print(color_blue)
     logging.info("[+] Let's start the static assessment based on 'OWASP MASVS v2'")
     
-    with open('masvs1.json', 'r') as json_file:
+    # MASVS V2 - MSTG-STORAGE
+    print(color_blue_bold)
+    logging.info("[+] MASVS V2 - MSTG-STORAGE")
+    with open('masvs1_java.json', 'r') as json_file:
         data = json.load(json_file)
-    # MASVS V2 - MSTG-STORAGE-2 - SQLite Database
-    print(color_blue)
-    logging.info("[+] The SQLite Database Storage related instances...\n")
-    masvs_java_command(data['patterns'], data['command'], data['reference'])
+    for item in data:
+        masvs_java_command(item['description'], item['patterns'], item['command'], item['note'], item['reference'])
+    # masvs_java_command(data['description'], data['patterns'], data['command'])
 
-    # MASVS V2 - MSTG-STORAGE-2 - Firebase Database
-    # print(color_blue)
-    # print("[+] The Firebase Database instances...\n")
-    # masvs_xml_command("'.firebaseio.com'", "-nr -F", "ehe")
 
 
 

@@ -4,27 +4,31 @@
         "keyword1":"'<activity'",
         "command2":"-e",
         "keyword2":"'android:exported=\"true\"'",
-        "description":"Exported Activities"
+        "description":"Exported Activities",
+        "note":"It is recommended to use exported activities securely, if observed."
     },
     {
         "command1":"-ne",
         "keyword1":"'<provider'",
         "command2":"-e",
         "keyword2":"'android:exported=\"true\"'",
-        "description":"Exported Content Providers"
+        "description":"Exported Content Providers",
+        "note":"It is recommended to use exported Content Providers securely, if observed."
     },
     {
         "command1":"-ne",
         "keyword1":"'<receiver'",
         "command2":"-e",
         "keyword2":"'android:exported=\"true\"'",
-        "description":"Exported Broadcast Receivers"
+        "description":"Exported Broadcast Receivers",
+        "note":"It is recommended to use exported Brodcast Receivers securely, if observed."
     },
     {
         "command1":"-ne",
         "keyword1":"'<service'",
         "command2":"-e",
         "keyword2":"'android:exported=\"true\"'",
-        "description":"Exported Services"
+        "description":"Exported Services",
+        "note":"It is recommended to use exported Services securely, if observed."
     }
 ]

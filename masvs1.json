@@ -1,5 +1,0 @@
-{
-    "patterns": ["'openOrCreateDatabase'", "'getWritableDatabase'", "'getReadableDatabase'"],
-    "command": "-nr -e",
-    "reference": "ehe"
-}
