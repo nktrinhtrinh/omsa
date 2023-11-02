@@ -22,12 +22,13 @@ color_cyan = "\033[36m"
 color_cyan_bold = "\033[1;36m"
 color_purple = "\033[1;35m"
 
+# global res_manifest
 
-def omsa_intro_func():
+def omsa_intro():
     print(color_red_bold)
     print(
         '''
-     _______    __   __    _______    _______ 
+     _______    __   __    _______    _\___/_ 
     |       |  |  |_|  |  |       | _|_____  |
     |   _   |  |       |  |  _____| |_____|  |__
     |  | |  |  |       |  | |_____   |       |  |
@@ -39,15 +40,14 @@ def omsa_intro_func():
     '''
     )
     print(color_reset)
-    # print("[+] OMSA - a comprehensive static code analysis tool for Android apps")
     print("[+] Based on: OWASP MASVS v2.0.0 - https://mas.owasp.org/MASVS/")
     print("[+] Author: trinhnk17 && vutq13")
-    # print("[*] Connect: Please do write to us for any suggestions/feedback.")
+
 
 def omsa_basic_req_checks():
     # OS type check
     if platform.system() != "Linux":
-        omsa_intro_func()
+        omsa_intro()
         print("\n[+] Checking if OMSA is being executed on Linux OS or not...")
         print("[!] Linux OS has not been identified! \n[!] Exiting...")
         print("\n[+] It is recommended to execute OMSA on Kali Linux OS.")
@@ -59,7 +59,7 @@ def omsa_basic_req_checks():
         try:
             subprocess.check_output(["which", utility])
         except subprocess.CalledProcessError:
-            omsa_intro_func()
+            omsa_intro()
             if utility == "grep":
                 print("\n[!] grep utility has not been observed. \n[!] Kindly install it first! \n[!] Exiting...")
             elif utility == "jadx":
@@ -96,11 +96,11 @@ def omsa_help():
 def main():
     # OMSA basic requirement checks
     omsa_basic_req_checks()
-    omsa_intro_func()
+    omsa_intro()
 
     # Function processing command
     if len(sys.argv[1:]) == 0 or sys.argv[1] == "-h":
-        omsa_intro_func()
+        omsa_intro()
         omsa_help()
         sys.exit(0)
 
@@ -221,11 +221,12 @@ def manifest_exported_command(command1, keyword1, command2, keyword2, descriptio
         logging.info(f"Error: {e}")
     if line_count > 0:
         print(color_brown)
+        # res_manifest[{description}] = {line_count}
         logging.info(f"----> Total {description} are: {line_count}\n")
         logging.info(f"----> QuickNote: {note}\n")
 
 
-def masvs_java_command(description, patterns, command, note, reference):
+def masvs_java_command(description, patterns, filters, command, note, reference):
     print(color_blue)
     logging.info(f"==> {description}")
     count = 0
@@ -233,11 +234,16 @@ def masvs_java_command(description, patterns, command, note, reference):
         if sources_file.endswith(".java"):
             if isinstance(patterns, list) and "-e" in command:
                 combined_pattern = " -e ".join(patterns)
-                keywords = [s.strip("'") for s in patterns]
-            else:
-                combined_pattern = patterns
-                keywords = patterns.replace("'", '')
+            else: combined_pattern = patterns
 
+            if filters != '' and isinstance(filters, list):
+                    keywords = [s.strip("'") for s in filters]
+            elif filters == '':
+                if isinstance(patterns, list):
+                    keywords = [s.strip("'") for s in patterns]
+                else: keywords = patterns.replace("'", '')
+
+            
             grep_factor = ["grep", command, combined_pattern, sources_file]
             grep_command = ' '.join(grep_factor)
             # print(grep_command)
@@ -356,6 +362,7 @@ def omsa_core(apk_path):
         manifest_exported_command(item['command1'], item['keyword1'], item['command2'], item['keyword2'], item['description'], item['note'])
 
     # APK Component Summary
+    # print(res_manifest)
 
     # SAST - Recursive file reading
     global java_files, xml_files
@@ -373,7 +380,7 @@ def omsa_core(apk_path):
     with open('storage1_java.json', 'r') as json_file:
         data = json.load(json_file)
     for item in data:
-        masvs_java_command(item['description'], item['patterns'], item['command'], item['note'], item['reference'])
+        masvs_java_command(item['description'], item['patterns'], item['filters'], item['command'], item['note'], item['reference'])
     with open('storage1_xml.json', 'r') as json_file:
         data = json.load(json_file)
     masvs_xml_command(data['description'], data['patterns'], data['command'], data['note'], data['reference'])
@@ -384,10 +391,21 @@ def omsa_core(apk_path):
     with open('storage2_java.json', 'r') as json_file:
         data = json.load(json_file)
     for item in data:
-        masvs_java_command(item['description'], item['patterns'], item['command'], item['note'], item['reference'])
+        masvs_java_command(item['description'], item['patterns'], item['filters'], item['command'], item['note'], item['reference'])
     with open('storage2_xml.json', 'r') as json_file:
         data = json.load(json_file)
     masvs_xml_command(data['description'], data['patterns'], data['command'], data['note'], data['reference'])
+
+    #MASVS V2 - MSTG-CRYPTO
+    print(color_blue_bold)
+    logging.info("[+] MASVS V2.0.0 - MSTG-CRYPTO")
+    print(color_cyan_bold)
+    logging.info("[+] MSTG-CRYPTO-1: The app employs current strong cryptography and uses it according to industry best practices.")
+    print(color_reset)
+    with open('crypto1_java.json', 'r') as json_file:
+        data = json.load(json_file)
+    for item in data:
+        masvs_java_command(item['description'], item['patterns'], item['filters'], item['command'], item['note'], item['reference'])
 
 
 

@@ -13,6 +13,7 @@
             "'System.out.print'",
             "'System.err.print'"
         ],
+        "filters":"",
         "command": "-nr -e",
         "note": "It is recommended that any sensitive data should not be part of the log's output or revealed into Stacktraces, if observed...",
         "reference": "https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements"
@@ -24,13 +25,23 @@
             "'.setContentTitle('",
             "'.setContentText('"
         ],
+        "filters":"",
         "command": "-nr -e",
         "note": "It is recommended that any sensitive data should not be notified via the push notifications, if observed...",
         "reference": "https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements"
     },
     {
+        "description": "The Keyboard Cache instances...",
+        "patterns": "':inputType='",
+        "filters":["'textAutoComplete'", "'textAutoCorrect'"],
+        "command": "-i",
+        "note": "    - It is recommended to set the android input type as textNoSuggestions for any sensitive data, if observed.",
+        "reference": "https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements"
+    },
+    {
         "description": "The allowBackup flag configuration...",
-        "patterns": "'android:allowBackup'",
+        "patterns": "'android:allowBackup:\"true\"'",
+        "filters":"",
         "command": "-i",
         "note": "It is recommended not to enable the allowBackup flag, if observed...",
         "reference": "https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements"
@@ -38,6 +49,7 @@
     {
         "description": "The flush instances utilized for clearing the Memory...",
         "patterns": "'.flush('",
+        "filters":"",
         "command": "-nr -F",
         "note": "It is recommended that the sensitive data should be flushed appropriately after its usage...",
         "reference": "https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements"
@@ -49,6 +61,7 @@
             "'.setPrimaryClip('",
             "'OnPrimaryClipChangedListener'"
         ],
+        "filters":"",
         "command": "-nr -e",
         "note": "It is recommended that any sensitive data should not be copied to the clipboard...",
         "reference": "https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements"
