@@ -40,8 +40,9 @@ def omsa_intro():
     '''
     )
     print(color_reset)
-    print("[+] Based on: OWASP MASVS v2.0.0 - https://mas.owasp.org/MASVS/")
-    print("[+] Author: trinhnk17 && vutq13")
+    print("[+] Based on: OWASP MASVS v2.0.0 && MASTG v1.6.0 - https://mas.owasp.org/MASVS/")
+    print("[+] Author: trinhnk17")
+    #print("[+] Author: trinhnk17 && vutq13")
 
 
 def omsa_basic_req_checks():
@@ -407,10 +408,40 @@ def omsa_core(apk_path):
     for item in data:
         masvs_java_command(item['description'], item['patterns'], item['filters'], item['command'], item['note'], item['reference'])
 
+    #MASVS V2 - MSTG-AUTH
+    print(color_blue_bold)
+    logging.info("[+] MASVS V2.0.0 - MSTG-AUTH")
+    print(color_cyan_bold)
+    logging.info("[+] MSTG-AUTH-2: The app performs local authentication securely according to the platform best practices.")
+    print(color_reset)
+    with open('auth2_java.json', 'r') as json_file:
+        data = json.load(json_file)
+    for item in data:
+        masvs_java_command(item['description'], item['patterns'], item['filters'], item['command'], item['note'], item['reference'])
 
+    #MASVS V2 - MSTG-NETWORK
+    print(color_blue_bold)
+    logging.info("[+] MASVS V2.0.0 - MSTG-NETWORK")
+    print(color_cyan_bold)
+    logging.info("[+] MSTG-NETWORK-1: The app secures all network traffic according to the current best practices.")
+    print(color_reset)
+    with open('network1_java.json', 'r') as json_file:
+        data = json.load(json_file)
+    for item in data:
+        masvs_java_command(item['description'], item['patterns'], item['filters'], item['command'], item['note'], item['reference'])
 
 
 
 
 if __name__ == "__main__":
     main()
+
+
+# { NETWORK-1
+#         "description": "The Hostname Verification...",
+#         "patterns": ["' HostnameVerifier'", "'.setHostnameVerifier('", "'.setDefaultHostnameVerifier('", "'NullHostnameVerifier'", "'ALLOW_ALL_HOSTNAME_VERIFIER'", "'AllowAllHostnameVerifier'", "'NO_VERIFY'", "'verify(String '", "'return true'", "'return 1'"],
+#         "filters":"",
+#         "command": "-nri -e",
+#         "note": "    - It is recommended not to set ALLOW_ALL_HOSTNAME_VERIFIER or NO_VERIFY, if observed.\nPlease note that, If class always returns true; upon verify() method, the possibility of MITM attacks increases.\nThe application should always verify a hostname before setting up a trusted connection.",
+#         "reference": "https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements"
+#     },

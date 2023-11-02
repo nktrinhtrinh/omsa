@@ -1,0 +1,18 @@
+[
+    {
+        "description": "The Biometric Authentication mechanism...",
+        "patterns": ["'BiometricPrompt'", "'BiometricManager'", "'FingerprintManager'"],
+        "filters":["'BiometricPrompt'", "'CryptoObject'", "'FingerprintManager'"],
+        "command": "-nr -e",
+        "note": "    - It is recommended to use Biometric Authentication mechanism along-with CryptoObject appropriately, if observed.\nPlease note that, If CryptoObject is not used as part of the authenticate method or used in an incorrect way, it can be bypassed by using tools such as Frida. Further, please be informed that the FingerprintManager class is deprecated in Android 9 (API level 28) and the Biometric library should be used instead as a best practice.",
+        "reference": "https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements"
+    },
+    {
+        "description": "Keys are not invalidated after biometric enrollment...",
+        "patterns": "'.setInvalidatedByBiometricEnrollment('",
+        "filters":"",
+        "command": "-nr -F",
+        "note": "    - It is recommended to set the flag as false, if observed.\nPlease note that, an attacker can retrieve the key from the KeyStore by enrolling a new authentication method, if the keys are not invalidated after enrollment of a new biometric authentication method.",
+        "reference": "https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements"
+    }
+]
