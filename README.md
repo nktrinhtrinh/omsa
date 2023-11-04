@@ -1,2 +1,0 @@
-# apksearch
-Better than apkhunt
