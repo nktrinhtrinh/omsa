@@ -60,21 +60,46 @@ class OMSA:
             file_hash_sha256 = hashlib.sha256(file.read()).hexdigest()
             logging.info(f"[+] APK Hash (SHA256): {file_hash_sha256}")
 
-        dex2jarpath = self.apk_pathdir + self.apk_name + ".jar"
-
         # Convert APK to Java JAR
-        # cmd_dex2jar = f"d2j-dex2jar {self.apk_path} -f -o {dex2jarpath}"
-        # out = run_command(cmd_dex2jar, "[+] d2j-dex2jar has started converting APK to Java JAR file")
-        # logging.info(out)
+        print(color_blue_bold)
+        logging.info("[+] Start converting into jar file")
+        self.convert_apk_to_jar()
 
-        # # Decompile the application using JADX
-        # cmd_jadx = f"jadx --deobf {self.apk_path} -d {self.jadxpath}"
-        # out = run_command(cmd_jadx, "[+] Jadx has started decompiling the application")
-        # logging.info(out)
+        # Decompile the application using JADX
+        print(color_blue_bold)
+        logging.info("[+] Start decompiling the application")
+        self.decompile_jar()
+        
 
-        self.omsa_run_module("manifest_info")
+        # self.omsa_run_module("manifest_info")
 
     
+    def convert_apk_to_jar(self):
+        dex2jarpath = self.apk_pathdir + self.apk_name + ".jar"
+        # check of jar file exist
+        if os.path.exists(dex2jarpath):
+            # print jar file existed
+            print(color_cyan)
+            logging.info(f"[+] Java JAR file existed at {dex2jarpath}! Skipping...")
+            print(color_reset)
+            return
+        
+        # Convert APK to Java JAR
+        cmd_dex2jar = f"d2j-dex2jar {self.apk_path} -f -o {dex2jarpath}"
+        out = run_command(cmd_dex2jar, "[+] d2j-dex2jar has started converting APK to Java JAR file")
+        logging.info(out)
+
+    def decompile_jar(self):
+        # check if self.jadxpath folder exist
+        if os.path.exists(self.jadxpath):
+            print(color_cyan)
+            logging.info(f"[+] The folder to decompile existed at {self.jadxpath}! Skipping...")
+            print(color_reset)
+            return
+        cmd_jadx = f"jadx --deobf {self.apk_path} -d {self.jadxpath}"
+        out = run_command(cmd_jadx, "[+] Jadx has started decompiling the application")
+        logging.info(out)
+
     def get_info_from_manifest(self, jadxpath):
         manifest_path = f"{jadxpath}/resources/AndroidManifest.xml"
         print(color_blue)

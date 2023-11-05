@@ -68,11 +68,9 @@ def enable_logging(apk_path):
     time_second = the_time.second
     ctime = f"{time_year}-{time_month:02d}-{time_day:02d}_{time_hour:02d}-{time_minute:02d}-{time_second:02d}"
     apk_file_name = pathlib.Path(apk_path).stem
-    log_file_path = os.path.join(os.path.dirname(apk_path), f"./log/OMSA_{apk_file_name}_{ctime}.txt")
+    log_file_path = os.path.join(f"./log/OMSA_{apk_file_name}_{ctime}.txt")
 
     logging.basicConfig(filename=log_file_path, level=logging.DEBUG, format='%(message)s')
     logging.getLogger().addHandler(logging.StreamHandler())
 
     logging.info("\n[+] Log-file path: %s", log_file_path)
-
-    
