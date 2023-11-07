@@ -1,7 +1,7 @@
 {
     "name": "Exported",
     "description": "Extracted exported data from the AndroidManifest file",
-    "file": "resources/AndroidManifest.xml",
+    "target_file": "resources/AndroidManifest.xml",
     "data": [
         {
             "args":"-n",
