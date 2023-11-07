@@ -100,28 +100,6 @@ class OMSA:
         out = run_command(cmd_jadx, "[+] Jadx has started decompiling the application")
         logging.info(out)
 
-    def get_info_from_manifest(self, jadxpath):
-        manifest_path = f"{jadxpath}/resources/AndroidManifest.xml"
-        print(color_blue)
-        logging.info("[+] Capturing the data from the AndroidManifest file")
-        with open('manifest.json', 'r') as json_file:
-            data = json.load(json_file)
-        for item in data:
-            args = item['args']
-            keyword = item['keyword']
-            description = item['description']
-            note = item['note']
-            logging.info(f"[+] {description}")
-            try:
-                result = subprocess.run(f"grep {args} {keyword} {manifest_path}", shell=True, universal_newlines=True, capture_output=True)
-                if result.returncode != 0 or result.stderr:
-                    print(color_red)
-                    logging.info(f"{result.stderr}")
-                    sys.exit(0)
-            except subprocess.CalledProcessError as e:
-                print(color_red)
-                logging.info(f"Error: {e}")
-
     def omsa_run_module(self, module_name):
         module_path = f"modules/{module_name}.json"
         with open(module_path, 'r') as module_file:
