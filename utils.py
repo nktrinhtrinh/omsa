@@ -16,6 +16,7 @@ color_cyan_bold = "\033[1;36m"
 color_purple = "\033[1;35m"
 
 def run_command(command, description):
+    out = 1
     print(color_blue)
     logging.info(description)
     print(color_reset)
@@ -24,38 +25,41 @@ def run_command(command, description):
         if result.returncode != 0 or result.stderr:
             print(color_red)
             logging.info(result.stderr)
-
+            out = 0
+        # TODO: If output is empty, print "No output"
         logging.info(result.stdout)
+        return out
     except subprocess.CalledProcessError as e:
         print(color_red)
         logging.info(f"Error: {e}")
 
 
-def run_command_test(command, description):
-    logging.info(f"{color_blue + description + color_reset}")
-    try:
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        while True:
-            stdout_output = process.stdout.readline()
-            stderr_output = process.stderr.readline()
+# Run command function that return output in realtime
+# def run_command_realtime(command, description):
+#     logging.info(f"{color_blue + description + color_reset}")
+#     try:
+#         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+#         while True:
+#             stdout_output = process.stdout.readline()
+#             stderr_output = process.stderr.readline()
             
-            if stdout_output == '' and stderr_output == '' and process.poll() is not None:
-                break
+#             if stdout_output == '' and stderr_output == '' and process.poll() is not None:
+#                 break
             
-            if stderr_output:
-                print(color_red)
-                logging.info(stderr_output.strip())
-                sys.exit(0)
+#             if stderr_output:
+#                 print(color_red)
+#                 logging.info(stderr_output.strip())
+#                 sys.exit(0)
 
-            logging.info(stdout_output.strip())
+#             logging.info(stdout_output.strip())
             
-        process.communicate()
-        if process.returncode != 0:
-            print(color_red)
-            logging.info(f"Command exited with non-zero status ({process.returncode})")
-    except subprocess.CalledProcessError as e:
-        print(color_red)
-        logging.info(f"Error: {e}")
+#         process.communicate()
+#         if process.returncode != 0:
+#             print(color_red)
+#             logging.info(f"Command exited with non-zero status ({process.returncode})")
+#     except subprocess.CalledProcessError as e:
+#         print(color_red)
+#         logging.info(f"Error: {e}")
 
 
 def enable_logging(apk_path):
