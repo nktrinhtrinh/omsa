@@ -31,31 +31,31 @@ def run_command(command, description):
         logging.info(f"Error: {e}")
 
 
-def run_command_test(command, description):
-    logging.info(f"{color_blue + description + color_reset}")
-    try:
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-        while True:
-            stdout_output = process.stdout.readline()
-            stderr_output = process.stderr.readline()
+# def run_command_test(command, description):
+#     logging.info(f"{color_blue + description + color_reset}")
+#     try:
+#         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+#         while True:
+#             stdout_output = process.stdout.readline()
+#             stderr_output = process.stderr.readline()
             
-            if stdout_output == '' and stderr_output == '' and process.poll() is not None:
-                break
+#             if stdout_output == '' and stderr_output == '' and process.poll() is not None:
+#                 break
             
-            if stderr_output:
-                print(color_red)
-                logging.info(stderr_output.strip())
-                sys.exit(0)
+#             if stderr_output:
+#                 print(color_red)
+#                 logging.info(stderr_output.strip())
+#                 sys.exit(0)
 
-            logging.info(stdout_output.strip())
+#             logging.info(stdout_output.strip())
             
-        process.communicate()
-        if process.returncode != 0:
-            print(color_red)
-            logging.info(f"Command exited with non-zero status ({process.returncode})")
-    except subprocess.CalledProcessError as e:
-        print(color_red)
-        logging.info(f"Error: {e}")
+#         process.communicate()
+#         if process.returncode != 0:
+#             print(color_red)
+#             logging.info(f"Command exited with non-zero status ({process.returncode})")
+#     except subprocess.CalledProcessError as e:
+#         print(color_red)
+#         logging.info(f"Error: {e}")
 
 
 def enable_logging(apk_path):
