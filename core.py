@@ -63,12 +63,12 @@ class OMSA:
 
         # Convert APK to Java JAR
         print(color_blue_bold)
-        logging.info("[+] Start converting into jar file")
+        logging.info("\n[+] Start converting into jar file")
         self.convert_apk_to_jar()
 
         # Decompile the application using JADX
         print(color_blue_bold)
-        logging.info("[+] Start decompiling the application")
+        logging.info("\n[+] Start decompiling the application")
         self.decompile_jar()
         
         # Run OMSA modules
@@ -107,7 +107,7 @@ class OMSA:
         with open(module_path, 'r') as module_file:
             module = json.load(module_file)
         print(color_blue_bold)
-        logging.info(f"[+] Start running module {module['name']}: {module['description']}")
+        logging.info(f"\n[+] Start running module {module['name']}: {module['description']}")
 
         module_target_file = self.jadxpath + '/' + module['target_file']
         module_data = module['data']

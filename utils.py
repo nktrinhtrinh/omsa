@@ -78,3 +78,12 @@ def enable_logging(apk_path):
     logging.getLogger().addHandler(logging.StreamHandler())
 
     logging.info("\n[+] Log-file path: %s", log_file_path)
+
+# get apk paths from folder, no recursive
+def get_apk_paths(folder_path):
+    apk_paths = []
+    for item in os.scandir(folder_path): # Use os.scandir instead of os.walk
+        if item.is_file() and item.name.endswith(".apk"): # Check if the item is a file and ends with ".apk"
+            apk_paths.append(item.path) # Use item.path instead of os.path.join
+    return apk_paths
+    

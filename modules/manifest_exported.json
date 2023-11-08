@@ -19,7 +19,7 @@
             "args":"-n",
             "keyword": ["<receiver .* android:exported=\"true\""],
             "description":"Exported Broadcast Receivers",
-            "note":"It is recommended to use exported Brodcast Receivers securely, if observed."
+            "note":"It is recommended to use exported Broadcast Receivers securely, if observed."
         },
         {
             "args":"-n",
