@@ -16,19 +16,19 @@ color_cyan_bold = "\033[1;36m"
 color_purple = "\033[1;35m"
 
 def run_command(command, description):
-    out = 1
-    print(color_blue)
+    print(color_reset + color_blue)
     logging.info(description)
     print(color_reset)
     try:
         result = subprocess.run(command, shell=True, universal_newlines=True, capture_output=True)
-        if result.returncode != 0 or result.stderr:
+        if result.stderr:
             print(color_red)
             logging.info(result.stderr)
-            out = 0
-        # TODO: If output is empty, print "No output"
-        logging.info(result.stdout)
-        return out
+            sys.exit(0)
+        if len(result.stdout) > 0:
+            logging.info(result.stdout)
+            return 1
+        return 0
     except subprocess.CalledProcessError as e:
         print(color_red)
         logging.info(f"Error: {e}")

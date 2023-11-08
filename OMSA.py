@@ -2,14 +2,8 @@ import os
 import sys
 import subprocess
 import platform
-import time
-import hashlib
-import datetime
 import logging
-import re
 import argparse
-import glob
-import json
 from utils import *
 from core import OMSA
 
@@ -70,7 +64,7 @@ def omsa_help():
     print("\t -h     For help")
     print("\t -p     Provide a single APK file path")
     # print("\t -m     Provide the folder path for multiple APK scanning")
-    print("\t -l     For logging (.txt file)")
+    print("\t -l     Enable logging (.txt file)")
     print(color_brown)
     print("\n    Examples:")
     print(color_reset)
@@ -81,8 +75,8 @@ def omsa_help():
     print(color_brown)
     print("\n    Note:")
     print(color_reset)
-    print("\t - Tested on Linux only!")
-    print("\t - Keep tools such as JADX, dex2jar, grep, etc. installed")
+    print("\t - This tool works on Linux only!")
+    print("\t - Make sure tools such as JADX, dex2jar, grep are installed")
 
 def main():
     omsa_basic_req_checks()
