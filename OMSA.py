@@ -10,6 +10,8 @@ from core import OMSA
 
 # TODO:
 #   - Add more modules
+#   - When running a modules, the core will process *.ext target_file
+#   - Specify file name/path when output grep command
 #   - Add -m option which can specify which module(s) can be run
 #   - Add -f option which will run on multiple apk files in a folder
 #   - Make change to the log file to improve UX
@@ -112,12 +114,19 @@ def main():
             logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
         # Get apk paths from folder
-        apk_paths = get_apk_paths(folder_path)
+        apk_paths = get_file_paths(folder_path, "*.apk")
+        # print discovered path in format item1, item2
+        print(color_cyan)
+        logging.info(f"[+] Discovered {len(apk_paths)} APK paths:")
         for path in apk_paths:
-            print(color_purple)
-            logging.info(f"[+] Start OMSA on APK: {path}\n-------------------------------------------------------------------------------------")
+            logging.info(f"   [-] {path}")
+        print(color_reset)
+
+        for path in apk_paths:
+            print(color_reset + color_purple)
+            logging.info(f"[+] Start OMSA on APK path: {path}\n-------------------------------------------------------------------------------------")
             omsa = OMSA(path)
-            omsa.omsa_core()        
+            omsa.omsa_core()
 
 if __name__ == "__main__":
     main()

@@ -21,7 +21,7 @@ def run_command(command, description):
     print(color_reset)
     try:
         result = subprocess.run(command, shell=True, universal_newlines=True, capture_output=True)
-        if result.stderr:
+        if result.stderr and "Exception" in result.stderr:
             print(color_red)
             logging.info(result.stderr)
             sys.exit(0)
@@ -87,3 +87,14 @@ def get_apk_paths(folder_path):
             apk_paths.append(item.path) # Use item.path instead of os.path.join
     return apk_paths
     
+import glob
+
+def get_file_paths(folder, pattern, recursive=False):
+    paths = []
+    for root, dirs, files in os.walk(folder):
+        if not recursive:
+            dirs.clear()
+        for name in files:
+            if glob.fnmatch.fnmatch(name, pattern):
+                paths.append(os.path.join(root, name))
+    return paths

@@ -85,11 +85,9 @@ class OMSA:
             logging.info(f"[+] Java JAR file existed at {dex2jarpath}! Skipping...")
             print(color_reset)
             return
-        
         # Convert APK to Java JAR
         cmd_dex2jar = f"d2j-dex2jar {self.apk_path} -f -o {dex2jarpath}"
-        out = run_command(cmd_dex2jar, "[+] d2j-dex2jar has started converting APK to Java JAR file")
-        logging.info(out)
+        run_command(cmd_dex2jar, "[+] d2j-dex2jar has started converting APK to Java JAR file")
 
     def decompile_jar(self):
         # check if self.jadxpath folder exist
@@ -99,8 +97,7 @@ class OMSA:
             print(color_reset)
             return
         cmd_jadx = f"jadx --deobf {self.apk_path} -d {self.jadxpath}"
-        out = run_command(cmd_jadx, "[+] Jadx has started decompiling the application")
-        logging.info(out)
+        run_command(cmd_jadx, "[+] Jadx has started decompiling the application! This may takes a while...")
 
     def omsa_run_module(self, module_name):
         module_path = f"modules/{module_name}.json"
@@ -119,8 +116,8 @@ class OMSA:
             description = "[+] " + item['description']
             note = item['note']
             command = f"grep {args} {keywords} {module_target_file}"
-            res = run_command(command, description)
-            if res == 1 and note != "":
+            ret = run_command(command, description)
+            if ret == 1 and note != "":
                 print(color_brown)
                 logging.info(f"----> QuickNote: {note}\n")
         
