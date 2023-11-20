@@ -1,28 +1,28 @@
 {
     "name": "Exported",
     "description": "Extracted exported data from the AndroidManifest file",
-    "target_file": "resources/AndroidManifest.xml",
+    "target_file": "AndroidManifest.xml",
     "data": [
         {
-            "args":"--color -Hn",
+            "args":"-Hn",
             "keyword": ["<activity .* android:exported=\"true\""],
             "description":"Exported Activities",
             "note":"It is recommended to use exported activities securely, if observed."
         },
         {
-            "args":"--color -Hn",
+            "args":"-Hn",
             "keyword": ["<provider .* android:exported=\"true\""],
             "description":"Exported Content Providers",
             "note":"It is recommended to use exported Content Providers securely, if observed."
         },
         {
-            "args":"--color -Hn",
+            "args":"-Hn",
             "keyword": ["<receiver .* android:exported=\"true\""],
             "description":"Exported Broadcast Receivers",
             "note":"It is recommended to use exported Broadcast Receivers securely, if observed."
         },
         {
-            "args":"--color -Hn",
+            "args":"-Hn",
             "keyword": ["<service .* android:exported=\"true\""],
             "description":"Exported Services",
             "note":"It is recommended to use exported Services securely, if observed."

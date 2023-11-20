@@ -1,7 +1,7 @@
 {
     "name": "Basic info",
     "description": "Data extracted from the AndroidManifest file",
-    "target_file": "resources/AndroidManifest.xml",
+    "target_file": "AndroidManifest.xml",
     "data": [
         {
             "description": "Package Name",

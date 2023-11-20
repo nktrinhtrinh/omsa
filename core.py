@@ -106,7 +106,7 @@ class OMSA:
         print(color_blue_bold)
         logging.info(f"\n[+] Start running module {module['name']}: {module['description']}")
 
-        module_target_file = self.jadxpath + '/' + module['target_file']
+        module_target_file = module['target_file']
         module_data = module['data']
 
         for item in module_data:
@@ -115,7 +115,7 @@ class OMSA:
             keywords = ' '.join(f" -e '{key}'" for key in keyword)
             description = "[+] " + item['description']
             note = item['note']
-            command = f"grep {args} {keywords} {module_target_file}"
+            command = f"grep -r --include={module_target_file} {args} {keywords} *"
             ret = run_command(command, description)
             if ret == 1 and note != "":
                 print(color_brown)
