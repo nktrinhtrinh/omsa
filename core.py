@@ -115,7 +115,7 @@ class OMSA:
             keywords = ' '.join(f" -e '{key}'" for key in keyword)
             description = "[+] " + item['description']
             note = item['note']
-            command = f"grep -r --include={module_target_file} {args} {keywords} *"
+            command = f"grep -r --include={module_target_file} {args} {keywords} {self.jadxpath}"
             ret = run_command(command, description)
             if ret == 1 and note != "":
                 print(color_brown)
