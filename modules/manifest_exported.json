@@ -4,28 +4,33 @@
     "target_file": "AndroidManifest.xml",
     "data": [
         {
-            "args":"-Hn",
-            "keyword": ["<activity .* android:exported=\"true\""],
-            "description":"Exported Activities",
-            "note":"It is recommended to use exported activities securely, if observed."
-        },
-        {
-            "args":"-Hn",
-            "keyword": ["<provider .* android:exported=\"true\""],
-            "description":"Exported Content Providers",
-            "note":"It is recommended to use exported Content Providers securely, if observed."
-        },
-        {
-            "args":"-Hn",
-            "keyword": ["<receiver .* android:exported=\"true\""],
-            "description":"Exported Broadcast Receivers",
-            "note":"It is recommended to use exported Broadcast Receivers securely, if observed."
-        },
-        {
-            "args":"-Hn",
-            "keyword": ["<service .* android:exported=\"true\""],
-            "description":"Exported Services",
-            "note":"It is recommended to use exported Services securely, if observed."
-        }
+            "target_file": "AndroidManifest.xml",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": "<activity .* android:exported=\"true\"",
+                    "description":"Exported Activities",
+                    "note":"It is recommended to use exported activities securely, if observed."
+                },
+                {
+                    "args":"-n",
+                    "keyword": "<provider .* android:exported=\"true\"",
+                    "description":"Exported Content Providers",
+                    "note":"It is recommended to use exported Content Providers securely, if observed."
+                },
+                {
+                    "args":"-n",
+                    "keyword": "<receiver .* android:exported=\"true\"",
+                    "description":"Exported Broadcast Receivers",
+                    "note":"It is recommended to use exported Broadcast Receivers securely, if observed."
+                },
+                {
+                    "args":"-n",
+                    "keyword": "<service .* android:exported=\"true\"",
+                    "description":"Exported Services",
+                    "note":"It is recommended to use exported Services securely, if observed."
+                }
+            ]
+        }    
     ]
 }

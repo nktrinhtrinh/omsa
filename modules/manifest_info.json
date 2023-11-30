@@ -1,67 +1,62 @@
 {
     "name": "Basic info",
     "description": "Data extracted from the AndroidManifest file",
-    "target_file": "AndroidManifest.xml",
     "data": [
         {
-            "description": "Package Name",
-            "args": "-ioP",
-            "keyword": ["package=\"\\K[^\"]+"],
-            "note": ""
-        },
-        {
-            "description": "Version Name",
-            "args": "-ioP",
-            "keyword": ["android:versionName=\"\\K[^\"]+"],
-            "note": ""
-        },
-        {
-            "description": "minSdkVersion",
-            "args": "-ioP",
-            "keyword": ["minSdkVersion=\"\\K[0-9]+"],
-            "note": ""
-        },
-        {
-            "description": "android:targetSdkVersion",
-            "args": "-ioP",
-            "keyword": ["targetSdkVersion=\"\\K[0-9]+"],
-            "note": ""
-        },
-        {
-            "description": "android:networkSecurityConfig attribute",
-            "args": "-ioP",
-            "keyword": ["android:networkSecurityConfig=\"\\K[^\"]"],
-            "note": ""
-        },
-        {
-            "description": "Activities",
-            "args": "-n",
-            "keyword": ["<activity"],
-            "note": ""
-        },
-        {
-            "description": "Content Providers",
-            "args": "-n",
-            "keyword": ["<provider"],
-            "note": ""
-        },
-        {
-            "description": "Broadcast Receivers",
-            "args": "-n",
-            "keyword": ["<receiver"],
-            "note": ""
-        },
-        {
-            "description": "Services",
-            "args": "-n",
-            "keyword": ["<service"],
-            "note": ""
-        },
-        {
-            "description": "Intent Filters",
-            "args": "-n",
-            "keyword": ["android.intent."],
-            "note": "It is recommended to use Intent Filters securely, if observed."
+            "target_file": "AndroidManifest.xml",
+            "rules": [
+                {
+                    "description": "Package Name",
+                    "args": "-ioP",
+                    "keyword": "package=\"\\K[^\"]+"
+                },
+                {
+                    "description": "Version Name",
+                    "args": "-ioP",
+                    "keyword": "android:versionName=\"\\K[^\"]+"
+                },
+                {
+                    "description": "minSdkVersion",
+                    "args": "-ioP",
+                    "keyword": "minSdkVersion=\"\\K[0-9]+"
+                },
+                {
+                    "description": "android:targetSdkVersion",
+                    "args": "-ioP",
+                    "keyword": "targetSdkVersion=\"\\K[0-9]+"
+                },
+                {
+                    "description": "android:networkSecurityConfig attribute",
+                    "args": "-ioP",
+                    "keyword": "android:networkSecurityConfig=\"\\K[^\"]"
+                },
+                {
+                    "description": "Activities",
+                    "args": "-n",
+                    "keyword": "<activity"
+                },
+                {
+                    "description": "Content Providers",
+                    "args": "-n",
+                    "keyword": "<provider"
+                },
+                {
+                    "description": "Broadcast Receivers",
+                    "args": "-n",
+                    "keyword": "<receiver"
+                },
+                {
+                    "description": "Services",
+                    "args": "-n",
+                    "keyword": "<service"
+                },
+                {
+                    "description": "Intent Filters",
+                    "args": "-n",
+                    "keyword": "android.intent.",
+                    "note": "It is recommended to use Intent Filters securely, if observed."
+                }
+            ]
         }
     ]
 }

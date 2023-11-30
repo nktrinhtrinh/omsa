@@ -1,0 +1,23 @@
+{
+    "name": "Custom template",
+    "description": "For testing purposes",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "description": "Finding test string",
+                    "args": "-n",
+                    "keyword": "test",
+                    "note": ""
+                },
+                {
+                    "description": "Finding number using regex",
+                    "args": "-nP",
+                    "keyword": ["\\d+", "[0-9]+"],
+                    "note": ""
+                }
+            ]
+        }
+    ]
+}

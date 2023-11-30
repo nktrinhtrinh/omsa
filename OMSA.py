@@ -7,15 +7,12 @@ import argparse
 from utils import *
 from core import OMSA
 
-
 # TODO:
 #   - Add more modules
-#   - When running a modules, the core will process *.ext target_file
-#   - Specify file name/path when output grep command
-#   - Add -m option which can specify which module(s) can be run
-#   - Add -f option which will run on multiple apk files in a folder
-#   - Make change to the log file to improve UX
-
+#   - Modules Template: 
+#       + If possible, use Type in which has a hardcoded argument in module templates.
+#       + Decide if reference should be whithin the note for separated
+#   - Idea: Run manifest info before running any module only so we won't need to check if the module is manifest_info
 
 def omsa_intro():
     print(color_red_bold)
@@ -38,14 +35,13 @@ def omsa_intro():
     #print("[+] Author: trinhnk17 && vutq13")
     print()
 
-
 def omsa_basic_req_checks():
     # OS type check
     if platform.system() != "Linux":
         omsa_intro()
         print("\n[+] Checking if OMSA is being executed on Linux OS or not...")
         print("[!] Linux OS has not been identified! \n[!] Exiting...")
-        print("\n[+] It is recommended to execute OMSA on Kali Linux OS.")
+        print("\n[+] It is recommended to execute OMSA on Kali Linux.")
         sys.exit(0)
 
     # Grep/jadx/dex2jar filepath check
@@ -70,7 +66,9 @@ def main():
     parser = argparse.ArgumentParser(description="A static analyzer for Android applications using MASVS v2.", epilog="Note: Make sure you are running on Linux. Also, tools such as JADX, dex2jar and grep need to be installed")
     parser.add_argument("-p", "--path", type=str, help="Provide a single APK file path.")
     parser.add_argument("-f", "--folder", type=str, help="Provide a folder path for multiple APK scanning.")
-    parser.add_argument("-l", "--log", action="store_true", help="Enable logging. Log file will be saved to ./log folder.")
+    parser.add_argument("-m", "--module", type=str, help="Specify module(s) to run. Syntax: module_1,module_2,...")
+    parser.add_argument("--no-color", action="store_true", help="Disable color output.")
+    parser.add_argument("-l", "--log", action="store_true", help="Enable logging to ./log folder. Default to --no-color.")
     
     # Function processing command
     if len(sys.argv[1:]) == 0:
@@ -84,10 +82,24 @@ def main():
         print("\n[!] Kindly provide either a single APK file path or a folder path. \n[!] Exiting...")
         sys.exit(0)
 
+    enable_color = True
+    if args.no_color:
+        enable_color = no_color()
+
+    # Default modules
+    modules = [
+        "manifest_info",
+        "manifest_exported",
+        "storage_1"
+    ]
+
+    if args.module:
+        modules = [module.strip() for module in args.module.split(',')]
+    
     if args.path:
         apk_path = args.path
         if not os.path.exists(apk_path):
-            print("\n[!] Given file-path '{}' does not exist. \n[!] Kindly verify the path/filename! \n[!] Exiting...".format(apk_path))
+            print(f"\n[!] Given file-path '{apk_path}' does not exist. \n[!] Kindly verify the path/filename! \n[!] Exiting...")
             sys.exit(0)
         # Enable logging
         if args.log:
@@ -96,36 +108,37 @@ def main():
         else:
             logging.basicConfig(level=logging.DEBUG, format='%(message)s')
         
-        logging.info(f"\n[+] Start OMSA on APK path: {apk_path}")
-
-        omsa = OMSA(apk_path)
+        omsa = OMSA(apk_path, modules=modules, color=enable_color)
         omsa.omsa_core()
+
     elif args.folder:
         folder_path = args.folder
         if not os.path.exists(folder_path):
-            print("\n[!] Given file-path '{}' does not exist. \n[!] Kindly verify the path/filename! \n[!] Exiting...".format(apk_path))
+            print(f"\n[!] Given path '{folder_path}' does not exist. \n[!] Kindly verify the path! \n[!] Exiting...")
             sys.exit(0)
-        # Enable logging
-        # TODO: all apks will be logged into one file or into a folder with each log separately?
-        if args.log:
-            print("\n[+] Start the logging process...")
-            enable_logging(folder_path)
-        else:
-            logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
         # Get apk paths from folder
-        apk_paths = get_file_paths(folder_path, "*.apk")
+        # apk_paths = get_file_paths(folder_path, "*.apk")
+        apk_paths = get_apk_paths(folder_path)
+
         # print discovered path in format item1, item2
         print(color_cyan)
-        logging.info(f"[+] Discovered {len(apk_paths)} APK paths:")
+        print(f"[+] Discovered {len(apk_paths)} APK paths:")
         for path in apk_paths:
-            logging.info(f"   [-] {path}")
+            print(f"   [-] {path}")
         print(color_reset)
 
         for path in apk_paths:
             print(color_reset + color_purple)
-            logging.info(f"[+] Start OMSA on APK path: {path}\n-------------------------------------------------------------------------------------")
-            omsa = OMSA(path)
+            print(f"[+] Start OMSA on APK path: {path}\n-------------------------------------------------------------------------------------")
+            # Enable logging
+            if args.log:
+                print("\n[+] Start the logging process...")
+                enable_logging(path)
+            else:
+                logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+
+            omsa = OMSA(path, modules=modules, color=enable_color)
             omsa.omsa_core()
 
 if __name__ == "__main__":

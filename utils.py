@@ -15,10 +15,23 @@ color_cyan = "\033[36m"
 color_cyan_bold = "\033[1;36m"
 color_purple = "\033[1;35m"
 
+def no_color():
+    global color_reset, color_red, color_red_bold, color_brown, color_blue, color_blue_bold, color_cyan, color_cyan_bold, color_purple
+    color_reset = ''
+    color_red = ''
+    color_red_bold = ''
+    color_brown = ''
+    color_blue = ''
+    color_blue_bold = ''
+    color_cyan = ''
+    color_cyan_bold = ''
+    color_purple = ''
+    return False
+
 def run_command(command, description):
-    print(color_reset + color_blue)
+    logging.info(color_reset + color_blue)
     logging.info(description)
-    print(color_reset)
+    logging.info(color_reset)
     try:
         result = subprocess.run(command, shell=True, universal_newlines=True, capture_output=True)
         if result.stderr and "Exception" in result.stderr:
@@ -26,9 +39,8 @@ def run_command(command, description):
             logging.info(result.stderr)
             sys.exit(0)
         if len(result.stdout) > 0:
-            logging.info(result.stdout)
-            return 1
-        return 0
+            return result.stdout
+        return ''
     except subprocess.CalledProcessError as e:
         print(color_red)
         logging.info(f"Error: {e}")
@@ -82,11 +94,12 @@ def enable_logging(apk_path):
 # get apk paths from folder, no recursive
 def get_apk_paths(folder_path):
     apk_paths = []
-    for item in os.scandir(folder_path): # Use os.scandir instead of os.walk
-        if item.is_file() and item.name.endswith(".apk"): # Check if the item is a file and ends with ".apk"
-            apk_paths.append(item.path) # Use item.path instead of os.path.join
+    for item in os.scandir(folder_path):
+        if item.is_file() and item.name.endswith(".apk"):
+            apk_paths.append(item.path)
     return apk_paths
     
+
 import glob
 
 def get_file_paths(folder, pattern, recursive=False):
@@ -98,3 +111,12 @@ def get_file_paths(folder, pattern, recursive=False):
             if glob.fnmatch.fnmatch(name, pattern):
                 paths.append(os.path.join(root, name))
     return paths
+
+def grep_output_to_dict(output):
+    lines = output.split('\n')
+    result = {}
+    for line in lines:
+        if line:
+            key, value = line.split(':', 1)
+            result.setdefault(key.strip(), []).append(value.strip())
+    return result
