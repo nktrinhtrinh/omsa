@@ -1,0 +1,28 @@
+{
+    "name": "MASVS-RESILIENCE - MASVS-RESILIENCE-4",
+    "description": "The app implements anti-dynamic analysis techniques.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["isDebuggable", "isDebuggerConnected"],
+                    "description":"RESILIENCE-4: Testing Anti-Debugging Detection",
+                    "note":"It is recommended to implement Anti-Debugging detection mechanisms in the application, if not observed.\nPlease note that, Multiple detection methods should be implemented so that it cannot be bypassed easily."
+                }
+            ]
+        },
+        {
+            "target_file": "AndroidManifest.xml",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": "android:debuggable=\"true\"",
+                    "description":"RESILIENCE-4: Testing Anti-Debugging Detection",
+                    "note":"It is recommended not to enable the debuggable flag, if observed.\nPlease note that, the enabled setting allows attackers to obtain access to sensitive information, control the application flow, etc."
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "name": "MASVS-PLATFORM - MASVS-PLATFORM-2",
+    "description": "The app uses WebViews securely.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["setJavaScriptEnabled", "WebView"],
+                    "description":"PLATFORM-2: Testing JavaScript Execution in WebViews",
+                    "note":"It is recommended to implement JavaScript execution in WebViews securely, if observed.\nPlease note that, depending on the permissions of the application, it may allow an attacker to interact with the different functionalities of the device."
+                },
+                {
+                    "args":"-n",
+                    "keyword": "addJavascriptInterface(",
+                    "description":"PLATFORM-2: Testing for Java Objects Exposed Through WebViews",
+                    "note":"It is recommended that only JavaScript provided with the APK should be allowed to use the bridges and no JavaScript should be loaded from remote endpoints, if observed.\nPlease note that, this present a potential security risk if any sensitive data is being exposed through those interfaces."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["setAllowFileAccess(", "setAllowFileAccessFromFileURLs(", "setAllowUniversalAccessFromFileURLs(", "setAllowContentAccess("],
+                    "description":"PLATFORM-2: Testing WebView Protocol Handlers --> Resource Access permissions",
+                    "note":"It is recommended to set Resource Access permissions as false, if observed.\nPlease note that, those functions are quite dangerous as it allows Webview to read all the files that the application has access to."
+                },
+                {
+                    "args":"-n",
+                    "keyword": [".loadUrl(", ".loadDataWithBaseURL("],
+                    "description":"PLATFORM-2: Testing WebView Protocol Handlers --> Remote/Local URL load in WebViews",
+                    "note":"It is recommended to implement Remote/Local URL load in WebViews securely, if observed."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["\\.clearCache(", "\\.deleteAllData(", "\\.removeAllCookies(", "\\.deleteRecursively(", "\\.clearFormData("],
+                    "description":"PLATFORM-2: Testing WebViews Cleanup",
+                    "note":"It is recommended to clear the WebView resources when the application accesses any sensitive data within that, which may include any files stored locally, the RAM cache, and any loaded JavaScript.\nPlease note that, this present a potential security risk if any sensitive data is being exposed."
+                }
+            ]
+        }
+    ]
+}

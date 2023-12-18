@@ -1,0 +1,23 @@
+{
+    "name": "MASVS-RESILIENCE - MASVS-RESILIENCE-1",
+    "description": "The app validates the integrity of the platform.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["supersu", "superuser", "/xbin/", "/sbin/"],
+                    "description":"RESILIENCE-1: Testing Root Detection",
+                    "note":"It is recommended to implement root detection mechanisms in the application, if not observed.\nPlease note that, Multiple detection methods should be implemented so that it cannot be bypassed easily."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["Build.MODEL.contains", "Build.MANUFACTURER.contains", "Build.HARDWARE.contains", "Build.PRODUCT.contains", "genyd"],
+                    "description":"RESILIENCE-1: Testing Emulator Detection",
+                    "note":"It is recommended to implement Emulator detection mechanisms in the application, if not observed.\nPlease note that, Multiple detection methods should be implemented so that it cannot be bypassed easily."
+                }
+            ]
+        }
+    ]
+}

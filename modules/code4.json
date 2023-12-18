@@ -1,0 +1,23 @@
+{
+    "name": "MASVS-CODE - MASVS-CODE-4",
+    "description": "The app validates and sanitizes all untrusted inputs.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": [".getSerializable(", ".getSerializableExtra(", "new Gson()"],
+                    "description":"CODE-4: Testing Object Persistence",
+                    "note":"It is recommended to use Serializable only when the serialized classes are stable, if observed.\nReflection-based persistence should be avoided as the attacker might be able to manipulate it to execute business logic."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["shouldOverrideUrlLoading(", "shouldInterceptRequest("],
+                    "description":"CODE-4: Testing for URL Loading in WebViews",
+                    "note":"It is recommended to implement custom URL handlers securely, if observed.\nPlease note that, Even if the attacker cannot bypass the checks on loading arbitrary URLs/domains, they may still be able to try to exploit the handlers."
+                }
+            ]
+        }
+    ]
+}

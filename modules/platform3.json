@@ -1,0 +1,23 @@
+{
+    "name": "MASVS-PLATFORM - MASVS-PLATFORM-3",
+    "description": "The app uses the user interface securely.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": "FLAG_SECURE",
+                    "description":"PLATFORM-3: Finding Sensitive Information in Auto-Generated Screenshots",
+                    "note":"It is recommended to set the FLAG_SECURE option to protect from Auto-Generated Screenshots issue.\nPlease note that, When the application goes into background, a screenshot of the current activity is taken which may leak sensitive information."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ":inputType=\"textPassword",
+                    "description":"PLATFORM-3: Checking for Sensitive Data Disclosure Through the User Interface",
+                    "note":"It is recommended not to disclose any sensitive data such as password, card details, etc. in the clear-text format via User Interface.\nMake sure that the application is masking sensitive user input by using the inputType=\"textPassword\" attribute. It is useful to mitigate risks such as shoulder surfing."
+                }
+            ]
+        }
+    ]
+}

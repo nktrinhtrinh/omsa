@@ -1,0 +1,23 @@
+{
+    "name": "MASVS-AUTH - MASVS-AUTH-2",
+    "description": "The app performs local authentication securely according to the platform best practices.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["BiometricPrompt", "BiometricManager", "FingerprintManager", "CryptoObject"],
+                    "description":"AUTH-2: Testing Biometric Authentication",
+                    "note":"It is recommended to use Biometric Authentication mechanism along-with CryptoObject appropriately, if observed.\nPlease note that, If CryptoObject is not used as part of the authenticate method or used in an incorrect way, it can be bypassed by using tools such as Frida.\nFurther, please be informed that the FingerprintManager class is deprecated in Android 9 (API level 28) and the Biometric library should be used instead as a best practice."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ".setInvalidatedByBiometricEnrollment(",
+                    "description":"AUTH-2: Testing Biometric Authentication --> Keys are not invalidated after biometric enrollment",
+                    "note":"It is recommended to set the flag as false, if observed.\nPlease note that, an attacker can retrieve the key from the KeyStore by enrolling a new authentication method, if the keys are not invalidated after enrollment of a new biometric authentication method."
+                }
+            ]
+        }
+    ]
+}

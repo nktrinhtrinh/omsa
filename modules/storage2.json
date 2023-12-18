@@ -1,0 +1,63 @@
+{
+    "name": "MASVS-STORAGE - MASVS-STORAGE-2",
+    "description": "The app prevents leakage of sensitive data.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ".flush(",
+                    "description":"STORAGE-2: Testing Memory for Sensitve Data --> Memory flush",
+                    "note":"It is recommended that the sensitive data should be flushed appropriately after its usage.\nPlease note that, all the sensitive data should be removed from memory as soon as possible."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["ClipboardManager",".setPrimaryClip(","OnPrimaryClipChangedListener"],
+                    "description":"STORAGE-2: Testing Memory for Sensitve Data --> ClipboardManager",
+                    "note":"It is recommended that any sensitive data should not be copied to the clipboard.\nPlease note that, The data can be accessed by other malicious applications if copied to the clipboard."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["setContentTitle", "setContentText"],
+                    "description":"STORAGE-2: Determining Whether Sensitive Data Is Shared with Third Parties via Notifications --> NotificationManager",
+                    "note":"It is recommended that any sensitive data should not be notified via the push notifications, if observed.\nPlease note that, It would be necessary to understand how the application is generating the notifications and which data ends up being shown."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["Log.v(", "Log.d(", "Log.i(", "Log.w(", "Log.e(", "logger.log(", "logger.logp(", "log.info",  "System.out.print", "System.err.print"],
+                    "description":"STORAGE-2: Testing Logs for Sensitive Data",
+                    "note":"It is recommended that any sensitive data should not be part of the log's output or revealed into Stacktraces, if observed."
+                }
+            ]
+        },
+        {
+            "target_file": "*.xml",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ":inputType=",
+                    "description":"STORAGE-2: Testing Memory for Sensitve Data --> The Keyboard Cache",
+                    "note":"It is recommended to set the android input type as textNoSuggestions for any sensitive data, if observed."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ":inputType=\"textPassword",
+                    "description":"STORAGE-2: Testing Memory for Sensitve Data --> The Sensitive Data Disclosure through the User Interface",
+                    "note":"It is recommended not to disclose any sensitive data such as password, card details, etc. in the clear-text format via User Interface. Make sure that the application is masking sensitive user input by using the inputType=\"textPassword\" attribute. It is useful to mitigate risks such as shoulder surfing."
+                }
+            ]
+        },
+        {
+            "target_file": "AndroidManifest.xml",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": "android:allowBackup=\"true\"",
+                    "description":"STORAGE-2: Testing Memory for Sensitve Data --> The allowBackup flag configuration",
+                    "note":"It is recommended not to enable the allowBackup flag, if observed.\nPlease note that, the enabled setting allows attackers to copy application data off of the device if they have enabled USB debugging."
+                }
+            ]
+        }
+    ]
+}

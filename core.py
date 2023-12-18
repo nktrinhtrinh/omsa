@@ -136,12 +136,13 @@ class OMSA:
                 else:
                     keyword_string = ' '.join(f" -e '{key}'" for key in keyword)
                 description = "[+] " + rule['description']
+
                 command = f"grep -r --include={target_file} {args} {keyword_string} {self.jadxpath}"
                 cmd_out = run_command(command, description)
                 # Print the ouput
                 out_dict = grep_output_to_dict(cmd_out)
                 for path, lines in out_dict.items():
-                    if not module_name == "manifest_info":
+                    if module_name not in ["manifest_info", "manifest_exported"]:
                         logging.info(color_cyan_bold)
                         logging.info(path)
                         logging.info(color_reset)

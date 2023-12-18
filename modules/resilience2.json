@@ -1,0 +1,17 @@
+{
+    "name": "MASVS-RESILIENCE - MASVS-RESILIENCE-2",
+    "description": "The app implements anti-tampering mechanisms.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ".getEntry(\"classes",
+                    "description":"RESILIENCE-2: Testing Anti-Debugging Detection",
+                    "note":"It is recommended to implement CRC checks on the app bytecode, native libraries, and important data files, if not observed.\nPlease note that, reverse engineers can easily bypass APK code signature check by re-packaging and re-signing an app.\nThe idea is to have additional controls in place so that the app only runs correctly in its unmodified state, even if the code signature is valid."
+                }
+            ]
+        }
+    ]
+}

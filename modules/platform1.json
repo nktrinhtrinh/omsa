@@ -1,0 +1,108 @@
+{
+    "name": "MASVS-PLATFORM - MASVS-PLATFORM-1",
+    "description": "The app uses IPC mechanisms securely.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["sendBroadcast(", "sendOrderedBroadcast(", "sendStickyBroadcast("],
+                    "description":"PLATFORM-1: The Implicit intents used for broadcast",
+                    "note":"It is recommended to not send the broadcast using an implicit intent, if observed.\nUse methods such as sendBroadcast, sendOrderedBroadcast, sendStickyBroadcast, etc. appropriately.\nPlease note that, an attacker can intercept or hijack the sensitive data among components.\nAlways use explicit intents for broadcast components or LocalBroadcastManager and use an appropriate permission."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["startActivity(", "startActivityForResult("],
+                    "description":"PLATFORM-1: The Implicit intents used for broadcast",
+                    "note":"It is recommended to not start the activity using an implicit intent, if observed.\nPlease note that, an attacker can hijack the activity and sometimes it may lead to sensitive information disclosure.\nAlways use explicit intents to start activities using the setComponent, setPackage, setClass or setClassName methods of the Intent class."
+                },
+                {
+                    "args":"-n",
+                    "keyword": "PendingIntent",
+                    "description":"PLATFORM-1: Testing for Vulnerable Implementation of PendingIntent",
+                    "note":"It is recommended to check the implementation of the base intent and the PendingIntent for the security pitfalls listed in the Pending Intents section."
+                }
+            ]
+        },
+        {
+            "target_file": "*.xml",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": "<uses-permission|<permission",
+                    "description":"PLATFORM-1: Testing for App Permissions --> Android Permissions",
+                    "note":"It is recommended that the appropriate protectionLevel should be configured in the Permission declaration, if observed.\nPlease note that, Dangerous permissions involve the user’s privacy."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["BIND_CARRIER_MESSAGING_SERVICE",
+                    "BIND_CHOOSER_TARGET_SERVICE",
+                    "GET_TASKS",
+                    "PERSISTENT_ACTIVITY",
+                    "PROCESS_OUTGOING_CALLS",
+                    "READ_INPUT_STATE",
+                    "RESTART_PACKAGES",
+                    "SET_PREFERRED_APPLICATIONS",
+                    "SMS_FINANCIAL_TRANSACTIONS",
+                    "USE_FINGERPRINT",
+                    "UNINSTALL_SHORTCUT"],
+                    "description":"PLATFORM-1: Testing for App Permissions --> The Deprecated/Unsupprotive Permissions in .xml file.",
+                    "note":"It is recommended that the application should not use the Deprecated or Unsupportive permissions, if observed."
+                }
+            ]
+        },
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["BIND_CARRIER_MESSAGING_SERVICE",
+                    "BIND_CHOOSER_TARGET_SERVICE",
+                    "GET_TASKS",
+                    "PERSISTENT_ACTIVITY",
+                    "PROCESS_OUTGOING_CALLS",
+                    "READ_INPUT_STATE",
+                    "RESTART_PACKAGES",
+                    "SET_PREFERRED_APPLICATIONS",
+                    "SMS_FINANCIAL_TRANSACTIONS",
+                    "USE_FINGERPRINT",
+                    "UNINSTALL_SHORTCUT"],
+                    "description":"PLATFORM-1: Testing for App Permissions --> The Deprecated/Unsupprotive Permissions in .java file.",
+                    "note":"It is recommended that the application should not use the Deprecated or Unsupportive permissions, if observed."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["checkCallingOrSelfPermission", "checkSelfPermission"],
+                    "description":"PLATFORM-1: Testing for App Permissions --> Custom Permissions",
+                    "note":"It is recommended that Custom Permissions should be used appropriately, if observed.\nPlease note that, The permissions provided programmatically are enforced in the manifest file, as those are more error-prone and can be bypassed more easily with, e.g., runtime instrumentation."
+                }
+            ]
+        },
+        {
+            "target_file": "AndroidManifest.xml",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["<activity .* android:exported=\"true\"",
+                    "<provider .* android:exported=\"true\"",
+                    "<receiver .* android:exported=\"true\"",
+                    "<service .* android:exported=\"true\""],
+                    "description":"PLATFORM-1: Testing for App Permissions --> The Exported service/activity/provider/receiver without permission set",
+                    "note":"It is recommended that the appropriate Permission should be set via 'android:permission' attribute with a proper android:protectionLevel in the AndroidManifest file, if observed.\nPlease note that, The unprotected components can be invoked by other malicious applications and potentially access sensitive data or perform any of the privileged tasks possibly."
+                }
+            ]
+        },
+        {
+            "target_file": "*.xml",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["<intent-filter", "<data android:scheme", "<action android:name"],
+                    "description":"PLATFORM-1: Testing Deep Links",
+                    "note":"It is recommended that custom URL schemes should be configured with android:autoVerify=true, if observed."
+                }
+            ]
+        }
+    ]
+}

@@ -90,7 +90,23 @@ def main():
     modules = [
         "manifest_info",
         "manifest_exported",
-        "storage_1"
+        "storage1",
+        "storage2",
+        "crypto1",
+        "crypto2",
+        "auth2",
+        "network1",
+        "network2",
+        "platform1",
+        "platform2",
+        "platform3",
+        "code2",
+        "code4",
+        "resilience1",
+        "resilience2",
+        "resilience3",
+        "resilience4"
+
     ]
 
     if args.module:

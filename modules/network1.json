@@ -1,0 +1,58 @@
+{
+    "name": "MASVS-NETWORK - MASVS-NETWORK-1",
+    "description": "The app secures all network traffic according to the current best practices.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["(HttpURLConnection)", "SSLCertificateSocketFactory.getInsecure("],
+                    "description":"NETWORK-1: Testing Data Encryption on the Network --> Testing Network Requests over Secure Protocols",
+                    "note":"It is recommended not to use any unencrypted transmission mechanisms for sensitive data.\nPlease note that, the HTTP protocol does not provide any encryption of the transmitted data, which can be easily intercepted by an attacker."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["SSLSocket", "getDefaultHostnameVerifier"],
+                    "description":"NETWORK-1: Testing Data Encryption on the Network --> Testing Network API Usage",
+                    "note":"SSLSocket does not verify the hostname. Use getDefaultHostnameVerifier to verify the hostname."
+                },
+                {
+                    "args":"-n",
+                    "keyword": [ "X509Certificate", "checkServerTrusted(", "checkClientTrusted(", "getAcceptedIssuers("],
+                    "description":"NETWORK-1: Testing Endpoint Identify Verification --> The Server Certificate verification",
+                    "note":"It is recommended to appropriately verify the Server Certificate, if observed.\nPlease note that, It should be signed by a trusted CA, not expired, not self-signed, etc.\nWhile implementing a custom X509TrustManager, the certificate chain needs to be verified appropriately, else the possibility of MITM attacks increases by providing an arbitrary certificate by an attacker."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["onReceivedSslError", "sslErrorHandler", ".proceed(", "setWebViewClient", "findViewById"],
+                    "description":"NETWORK-1: Testing Endpoint Identify Verification --> The WebView Server Certificate verification",
+                    "note":"The application seems to be implementing its own onReceivedSslError method, if observed.\nPlease note that, the application should appropriately verify the WebView Server Certificate implementation (such as having a call to the handler.cancel method).\nTLS certificate errors should not be ignored as the mobile browser performs the server certificate validation when a WebView is used."
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["SSLContext.getInstance(", "tlsVersions(TlsVersion"],
+                    "description":"NETWORK-1: Testing the TLS Settings",
+                    "note":"It is recommended to enforce TLS 1.2 as the minimum protocol version.\nPlease note that, Failure to do so could open the door to downgrade attacks such as DROWN/POODLE/BEAST etc."
+                },
+                {
+                    "args":"-n",
+                    "keyword": [" ProviderInstaller.installIfNeeded", " ProviderInstaller.installIfNeededAsync"],
+                    "description":"NETWORK-1: Testing the Security Provider",
+                    "note":"It is recommended that applications based on the Android SDK should depend on GooglePlayServices, if not observed.\nPlease note that, The ProviderInstaller class is called with either installIfNeeded or installIfNeededAsync to prevent SSL exploits."
+                }
+            ]
+        },
+        {
+            "target_file": "*.xml",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["android:usesCleartextTraffic", "cleartextTrafficPermitted"],
+                    "description":"NETWORK-1: Testing Data Encryption on the Network --> Testing Cleartext Traffic",
+                    "note":"It is recommended to set android:usesCleartextTraffic or cleartextTrafficPermitted to false.\nPlease note that, Sensitive information should be sent over secure channels only."
+                }
+            ]
+        }
+    ]
+}

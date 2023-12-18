@@ -1,0 +1,17 @@
+{
+    "name": "MASVS-RESILIENCE - MASVS-RESILIENCE-3",
+    "description": "The app implements anti-static analysis mechanisms.",
+    "data": [
+        {
+            "target_file": "*.java",
+            "rules": [
+                {
+                    "args":"-n",
+                    "keyword": ["StrictMode.setThreadPolicy", "StrictMode.setVmPolicy"],
+                    "description":"RESILIENCE-3: Testing for Debugging Code and Verbose Error Logging",
+                    "note":"It is recommended that StrictMode should not be enabled in a production application, if observed.\nPlease note that, It is designed for pre-production use only."
+                }
+            ]
+        }
+    ]
+}
