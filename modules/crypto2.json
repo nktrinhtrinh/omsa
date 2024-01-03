@@ -9,7 +9,8 @@
                     "args":"-n",
                     "keyword": ["java.security.", "javax.crypto.", "android.security.", "android.security.keystore."],
                     "description":"CRYPTO-2: Testing the Purposes of Keys",
-                    "note":"For each identified instance, identify its purposes, its type and the business logic which uses identified instances of cryptography."
+                    "note":"For each identified instance, identify its purposes, its type and the business logic which uses identified instances of cryptography.",
+                    "reference": "CWE-320: Key Management Errors.\n\thttps://cwe.mitre.org/data/definitions/320.html"
                 }
             ]
         }

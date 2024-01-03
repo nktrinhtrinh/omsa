@@ -131,6 +131,7 @@ class OMSA:
                 args = rule['args']
                 # Parse keyword
                 keyword = rule['keyword']
+                important_keyword = rule.get('important_keyword', "")
                 if isinstance(keyword, str):
                     keyword_string = f" -e '{keyword}'"
                 else:
@@ -139,29 +140,45 @@ class OMSA:
 
                 command = f"grep -r --include={target_file} {args} {keyword_string} {self.jadxpath}"
                 cmd_out = run_command(command, description)
-                # Print the ouput
-                out_dict = grep_output_to_dict(cmd_out)
-                for path, lines in out_dict.items():
+                if (important_keyword == "") or (important_keyword != "" and any(any(imp_kw in line for imp_kw in important_keyword) for line in cmd_out.split('\n'))):
+                    # Print the ouput
+                    out_dict = grep_output_to_dict(cmd_out)
+                    for path, lines in out_dict.items():
+                        if module_name not in ["manifest_info", "manifest_exported"]:
+                            logging.info(color_cyan_bold)
+                            logging.info(path)
+                            logging.info(color_reset)
+                        for line in lines :
+                            logging.info(line)
+                    
                     if module_name not in ["manifest_info", "manifest_exported"]:
-                        logging.info(color_cyan_bold)
-                        logging.info(path)
+                        logging.info(color_purple)
+                        logging.info(f"[?] Total files needed to check: {len(out_dict)}")
                         logging.info(color_reset)
-                    for line in lines :
-                        
-                        logging.info(line)
-                # Print quicknote
-                if len(cmd_out) > 0 :
-                    try: 
-                        note = rule['note']
-                        if note != "":
+
+                    # Print quicknote
+                    if len(cmd_out) > 0 :
+                        try: 
+                            note = rule['note']
+                            if note != "":
+                                logging.info(color_brown)
+                                logging.info(f"=> QuickNote: \n\t{note}\n")
+                            
+                            reference = rule['reference']
+                            if reference != "":
+                                logging.info(color_green_bold)
+                                logging.info(f"[*] Reference: \n\t{reference}\n")
+                        except:
+                            pass
+                    else:
+                        note1 = rule.get('note1',"")
+                        if note1 != "":
                             logging.info(color_brown)
-                            logging.info(f"=> QuickNote: {note}")
-                        
-                        reference = rule['reference']
-                        if reference != "":
-                            logging.info(color_purple)
-                            logging.info(f"Reference: {reference}\n")
-                    except:
-                        pass
-                else:
-                    logging.info(f"{color_red}No match instances!")
+                            logging.info(f"=> QuickNote: \n\t{note1}\t")
+                            
+                            reference = rule['reference']
+                            if reference != "":
+                                logging.info(color_green_bold)
+                                logging.info(f"[*] Reference: \n\t{reference}\n")
+                        else: logging.info(f"{color_red}No match instances!")
+                else: logging.info(f"{color_red}No match instances!")

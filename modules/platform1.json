@@ -8,20 +8,23 @@
                 {
                     "args":"-n",
                     "keyword": ["sendBroadcast(", "sendOrderedBroadcast(", "sendStickyBroadcast("],
-                    "description":"PLATFORM-1: The Implicit intents used for broadcast",
-                    "note":"It is recommended to not send the broadcast using an implicit intent, if observed.\nUse methods such as sendBroadcast, sendOrderedBroadcast, sendStickyBroadcast, etc. appropriately.\nPlease note that, an attacker can intercept or hijack the sensitive data among components.\nAlways use explicit intents for broadcast components or LocalBroadcastManager and use an appropriate permission."
+                    "description":"PLATFORM-1: Testing for Sensitive Functionality Exposure Through IPC --> The Implicit intents used for broadcast",
+                    "note":"Should not send the broadcast using an implicit intent.\n\tUse methods such as sendBroadcast, sendOrderedBroadcast, sendStickyBroadcast, etc. carefully",
+                    "reference": "CWE-927: Use of Implicit Intent for Sensitive Communication.\n\thttps://cwe.mitre.org/data/definitions/927.html"
                 },
                 {
                     "args":"-n",
                     "keyword": ["startActivity(", "startActivityForResult("],
-                    "description":"PLATFORM-1: The Implicit intents used for broadcast",
-                    "note":"It is recommended to not start the activity using an implicit intent, if observed.\nPlease note that, an attacker can hijack the activity and sometimes it may lead to sensitive information disclosure.\nAlways use explicit intents to start activities using the setComponent, setPackage, setClass or setClassName methods of the Intent class."
+                    "description":"PLATFORM-1: Testing for Sensitive Functionality Exposure Through IPC --> The Implicit intent used for activity",
+                    "note":"Should not start the activity using an implicit intent.\n\tAlways use explicit intents to start activities using the setComponent, setPackage, setClass or setClassName methods of the Intent class.",
+                    "reference": "CWE-927: Use of Implicit Intent for Sensitive Communication.\n\thttps://cwe.mitre.org/data/definitions/927.html"
                 },
                 {
                     "args":"-n",
                     "keyword": "PendingIntent",
                     "description":"PLATFORM-1: Testing for Vulnerable Implementation of PendingIntent",
-                    "note":"It is recommended to check the implementation of the base intent and the PendingIntent for the security pitfalls listed in the Pending Intents section."
+                    "note":"When testing Pending Intents, must ensure that they are immutable and that the app explicitly specifies the exact package, action, and component that will receive the base intent.",
+                    "reference": "CWE-211: Externally-Generated Error Message Containing Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/211.html"
                 }
             ]
         },
@@ -32,7 +35,8 @@
                     "args":"-n",
                     "keyword": "<uses-permission|<permission",
                     "description":"PLATFORM-1: Testing for App Permissions --> Android Permissions",
-                    "note":"It is recommended that the appropriate protectionLevel should be configured in the Permission declaration, if observed.\nPlease note that, Dangerous permissions involve the user’s privacy."
+                    "note":"The appropriate protectionLevel should be configured in the Permission declaration.\n\tDangerous permissions involve the user’s privacy. Go through the permissions with the developer to identify the purpose of every permission set and remove unnecessary permissions.",
+                    "reference": "CWE-276: Incorrect Default Permissions.\n\thttps://cwe.mitre.org/data/definitions/276.html"
                 },
                 {
                     "args":"-n",
@@ -48,7 +52,8 @@
                     "USE_FINGERPRINT",
                     "UNINSTALL_SHORTCUT"],
                     "description":"PLATFORM-1: Testing for App Permissions --> The Deprecated/Unsupprotive Permissions in .xml file.",
-                    "note":"It is recommended that the application should not use the Deprecated or Unsupportive permissions, if observed."
+                    "note":"The application should not use the Deprecated or Unsupportive permissions.",
+                    "reference":"CWE-276: Incorrect Default Permissions.\n\thttps://cwe.mitre.org/data/definitions/276.html"
                 }
             ]
         },
@@ -69,13 +74,15 @@
                     "USE_FINGERPRINT",
                     "UNINSTALL_SHORTCUT"],
                     "description":"PLATFORM-1: Testing for App Permissions --> The Deprecated/Unsupprotive Permissions in .java file.",
-                    "note":"It is recommended that the application should not use the Deprecated or Unsupportive permissions, if observed."
+                    "note":"The application should not use the Deprecated or Unsupportive permissions.",
+                    "reference":"CWE-276: Incorrect Default Permissions.\n\thttps://cwe.mitre.org/data/definitions/276.html"
                 },
                 {
                     "args":"-n",
                     "keyword": ["checkCallingOrSelfPermission", "checkSelfPermission"],
                     "description":"PLATFORM-1: Testing for App Permissions --> Custom Permissions",
-                    "note":"It is recommended that Custom Permissions should be used appropriately, if observed.\nPlease note that, The permissions provided programmatically are enforced in the manifest file, as those are more error-prone and can be bypassed more easily with, e.g., runtime instrumentation."
+                    "note":"Custom Permissions should be used carefully. The permissions provided programmatically are enforced in the manifest file, as those are more error-prone and can be bypassed more easily with, e.g., runtime instrumentation.",
+                    "reference":"CWE-276: Incorrect Default Permissions.\n\thttps://cwe.mitre.org/data/definitions/276.html"
                 }
             ]
         },
@@ -89,7 +96,8 @@
                     "<receiver .* android:exported=\"true\"",
                     "<service .* android:exported=\"true\""],
                     "description":"PLATFORM-1: Testing for App Permissions --> The Exported service/activity/provider/receiver without permission set",
-                    "note":"It is recommended that the appropriate Permission should be set via 'android:permission' attribute with a proper android:protectionLevel in the AndroidManifest file, if observed.\nPlease note that, The unprotected components can be invoked by other malicious applications and potentially access sensitive data or perform any of the privileged tasks possibly."
+                    "note":"The appropriate Permission should be set via 'android:permission' attribute with a proper android:protectionLevel in the AndroidManifest file.\n\tThe unprotected components can be invoked by other malicious applications and potentially access sensitive data or perform any of the privileged tasks possibly.",
+                    "reference": "CWE-276: Incorrect Default Permissions.\n\thttps://cwe.mitre.org/data/definitions/276.html"
                 }
             ]
         },
@@ -98,9 +106,11 @@
             "rules": [
                 {
                     "args":"-n",
+                    "important_keyword": "<intent-filter",
                     "keyword": ["<intent-filter", "<data android:scheme", "<action android:name"],
                     "description":"PLATFORM-1: Testing Deep Links",
-                    "note":"It is recommended that custom URL schemes should be configured with android:autoVerify=true, if observed."
+                    "note":"Custom URL schemes should be configured with android:autoVerify=true.",
+                    "reference": "CWE-927: Use of Implicit Intent for Sensitive Communication.\n\thttps://cwe.mitre.org/data/definitions/927.html"
                 }
             ]
         }

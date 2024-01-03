@@ -7,45 +7,46 @@
             "rules": [
                 {
                     "args":"-n",
+                    "important_keyword": ["MODE_WORLD_READABLE","MODE_WORLD_WRITEABLE"],
                     "keyword": ["openFileOutput","FileInputStream","MODE_WORLD_READABLE","MODE_WORLD_WRITEABLE"],
                     "description":"STORAGE-1: Testing Local Storage for Sensitive Data --> Internal Storage",
-                    "note":"It is recommended that sensitive files saved to the internal storage should not be accessed by other application, if observed.\nPlease note that, Modes such as MODE_WORLD_READABLE and MODE_WORLD_WRITEABLE may pose a security risk."
+                    "note":"Sensitive files saved to the internal storage should not be accessed by other application.\n\tModes such as MODE_WORLD_READABLE and MODE_WORLD_WRITEABLE may pose a security risk.",
+                    "reference": "CWE-922: Insecure Storage of Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/922.html"
                 },
                 {
                     "args":"-n",
                     "keyword": ["getExternalFilesDir", "getExternalFilesDirs","getExternalCacheDir", "getExternalCacheDirs","getCacheDir","getExternalStorageState","getExternalStorageDirectory","getExternalStoragePublicDirectory"],
                     "description":"STORAGE-1: Testing Local Storage for Sensitive Data --> External Storage",
-                    "note":"It is recommended that any sensitive data should not be stored in the external storage, if observed.\nPlease note that, Files saved to external storage are world-readable and it can be used by an attacker to allow for arbitrary control of the application in some scenarios."
+                    "note":"Any sensitive data should not be stored in the external storage.\n\tFiles stored outside the application folder (data/data/<package-name>/) will not be deleted when the user uninstalls the application.\n\tFiles saved to external storage are world-readable and it can be used by an attacker to allow for arbitrary control of the application in some cases.",
+                    "reference": "CWE-922: Insecure Storage of Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/922.html"
                 },
                 {
                     "args":"-n",
                     "keyword": ".createTempFile(",
                     "description":"STORAGE-1: Testing Local Storage for Sensitive Data --> Temporary File Creation",
-                    "note":"It is recommended that the temporary files should be securely deleted upon their usage, if observed.\nPlease note that, Creating and using insecure temporary files can leave application and system data vulnerable to attack."
-                },
-                {
-                    "args":"-n",
-                    "keyword": "SharedPreferences.Editor",
-                    "description":"STORAGE-1: Testing Local Storage for Sensitive Data --> Input Validation",
-                    "note":"It is recommended that input validation needs to be applied on the sensitive data the moment it is read back again, if observed.\nPlease note that, Any process can override the data for any publicly accessible data storage."
+                    "note":"Temporary files should be securely deleted upon their usage.\n\tCreating and using insecure temporary files can leave application and system data vulnerable to attack.",
+                    "reference": "CWE-277: Insecure Inherited Permissions.\n\thttps://cwe.mitre.org/data/definitions/277.html"
                 },
                 {
                     "args":"-n",
                     "keyword": "getSharedPreferences(",
                     "description":"STORAGE-1: Testing Local Storage for Sensitive Data --> Shared Preferences",
-                    "note":"It is recommended to use shared preferences appropriately, if observed.\nPlease note that, Misuse of the SharedPreferences API can often lead to the exposure of sensitive data.\nMODE_WORLD_READABLE allows all applications to access and read the file contents.\nApplications compiled with an android:targetSdkVersion value less than 17 may be affected, if they run on an OS version that was released before Android 4.2 (API level 17)."
+                    "note":"Should use Shared Preferences carefully.\n\tMisuse of the SharedPreferences API can often lead to the exposure of sensitive data.",
+                    "reference": "CWE-922: Insecure Storage of Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/922.html"
                 },
                 {
                     "args":"-n",
                     "keyword": ["openOrCreateDatabase", "getWritableDatabase","getReadableDatabase"],
                     "description":"STORAGE-1: Testing Local Storage for Sensitive Data --> SQLite Database",
-                    "note":"It is recommended that sensitive data should not be stored in unencrypted SQLite databases, if observed.\nPlease note that, SQLite databases should be password-encrypted."
+                    "note":"Sensitive information should not be stored in unencrypted SQLite databases.\n\tSQLite databases should be password-encrypted.",
+                    "reference": "CWE-922: Insecure Storage of Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/922.html"
                 },
                 {
                     "args":"-n",
                     "keyword": "RealmConfiguration",
                     "description":"STORAGE-1: Testing Local Storage for Sensitive Data --> Realm Database",
-                    "note":"It is recommended that Realm database instances should not be misconfigured, if observed.\nPlease note that, the database and its contents have been encrypted with a key stored in the configuration file."
+                    "note":"Should not misconfigure Realm database.\n\tIf the database is not encrypted, you should be able to obtain the data.\n\tIf the database is encrypted, determine whether the key is hard-coded in the source or resources and whether it is stored unprotected in shared preferences or some other location.",
+                    "reference": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor.\n\thttps://cwe.mitre.org/data/definitions/200.html"
                 }
             ]
         },
@@ -53,11 +54,11 @@
             "target_file": "*.xml",
             "rules": [
                 {
-                    "description":"The Firebase Database instances...",
+                    "description":"STORAGE-1: Testing Local Storage for Sensitive Data --> Firebase Database",
                     "keyword":".firebaseio.com",
                     "args":"-n",
-                    "note":"It is recommended to use shared preferences appropriately, if observed.\nPlease note that, Misuse of the SharedPreferences API can often lead to the exposure of sensitive data.\nMODE_WORLD_READABLE allows all applications to access and read the file contents.\nApplications compiled with an android:targetSdkVersion value less than 17 may be affected, if they run on an OS version that was released before Android 4.2 (API level 17).",
-                    "reference":"- OWASP MASVS: MSTG-STORAGE-2 | CWE-922: Insecure Storage of Sensitive Information\n- https://mobile-security.gitbook.io/masvs/security-requirements/0x07-v2-data_storage_and_privacy_requirements"
+                    "note":"Should not misconfigure Firebase Realtime database.\n\tIf the security rules permit open access or fail to restrict access to specific users for particular datasets, an attacker can gain unauthorized access to read the database content without requiring any authentication.",
+                    "reference":"CWE-200: Exposure of Sensitive Information to an Unauthorized Actor.\n\thttps://cwe.mitre.org/data/definitions/200.html"
                     
                 }
             ]

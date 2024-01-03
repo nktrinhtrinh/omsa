@@ -9,13 +9,15 @@
                     "args":"-n",
                     "keyword": ["BiometricPrompt", "BiometricManager", "FingerprintManager", "CryptoObject"],
                     "description":"AUTH-2: Testing Biometric Authentication",
-                    "note":"It is recommended to use Biometric Authentication mechanism along-with CryptoObject appropriately, if observed.\nPlease note that, If CryptoObject is not used as part of the authenticate method or used in an incorrect way, it can be bypassed by using tools such as Frida.\nFurther, please be informed that the FingerprintManager class is deprecated in Android 9 (API level 28) and the Biometric library should be used instead as a best practice."
+                    "note":"Should use Biometric Authentication mechanism along-with CryptoObject carefully.\n\tIf CryptoObject is not used as part of the authenticate method or used in an incorrect way, it can be bypassed by using tools such as Frida. The FingerprintManager class is deprecated in Android 9 (API level 28) and the Biometric library should be used instead as a best practice.",
+                    "reference": "CWE-287: Improper Authentication.\n\thttps://cwe.mitre.org/data/definitions/287.html"
                 },
                 {
                     "args":"-n",
-                    "keyword": ".setInvalidatedByBiometricEnrollment(",
-                    "description":"AUTH-2: Testing Biometric Authentication --> Keys are not invalidated after biometric enrollment",
-                    "note":"It is recommended to set the flag as false, if observed.\nPlease note that, an attacker can retrieve the key from the KeyStore by enrolling a new authentication method, if the keys are not invalidated after enrollment of a new biometric authentication method."
+                    "keyword": "setUserAuthenticationRequired",
+                    "description":"AUTH-2: Testing Confirm Credentials",
+                    "note":"Make sure that the unlocked key is used during the application flow.\n\tFor example, the key may be used to decrypt local storage or a message received from a remote endpoint. If the application simply checks whether the user has unlocked the key or not, the application may be vulnerable to a local authentication bypass.",
+                    "reference": "CWE-287: Improper Authentication.\n\thttps://cwe.mitre.org/data/definitions/287.html"
                 }
             ]
         }

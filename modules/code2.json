@@ -9,7 +9,8 @@
                     "args":"-n",
                     "keyword": ["AppUpdateManager"],
                     "description":"CODE-2: Testing Enforced Updating",
-                    "note":"It is recommended that applications should be forced to be updated.\nIf a security update comes in, then AppUpdateType.IMMEDIATE flag should be used in order to make sure that the user cannot go forward with using the app without updating it.\nPlease note that, newer versions of an application will not fix security issues that are living in the backends to which the app communicates."
+                    "note":"Applications should be forced to be updated.",
+                    "reference": "CWE-1277: Firmware Not Updateable.\n\thttps://cwe.mitre.org/data/definitions/1277.html"
                 }
             ]
         }

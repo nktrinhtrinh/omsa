@@ -134,7 +134,6 @@ def main():
             sys.exit(0)
 
         # Get apk paths from folder
-        # apk_paths = get_file_paths(folder_path, "*.apk")
         apk_paths = get_apk_paths(folder_path)
 
         # print discovered path in format item1, item2

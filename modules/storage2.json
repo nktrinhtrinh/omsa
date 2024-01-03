@@ -9,25 +9,31 @@
                     "args":"-n",
                     "keyword": ".flush(",
                     "description":"STORAGE-2: Testing Memory for Sensitve Data --> Memory flush",
-                    "note":"It is recommended that the sensitive data should be flushed appropriately after its usage.\nPlease note that, all the sensitive data should be removed from memory as soon as possible."
+                    "note":"Sensitive data should be flushed appropriately after its usage.\n\tAll the sensitive data should be removed from memory as soon as possible.",
+                    "reference": "CWE-316: Cleartext Storage of Sensitive Information in Memory.\n\thttps://cwe.mitre.org/data/definitions/316.html"
                 },
                 {
                     "args":"-n",
+                    "important_keyword": [".setPrimaryClip(","OnPrimaryClipChangedListener"],
                     "keyword": ["ClipboardManager",".setPrimaryClip(","OnPrimaryClipChangedListener"],
                     "description":"STORAGE-2: Testing Memory for Sensitve Data --> ClipboardManager",
-                    "note":"It is recommended that any sensitive data should not be copied to the clipboard.\nPlease note that, The data can be accessed by other malicious applications if copied to the clipboard."
+                    "note":"Any sensitive data should not be copied to the clipboard.\n\tThe data can be accessed by other malicious applications if copied to the clipboard.",
+                    "reference":"CWE-316: Cleartext Storage of Sensitive Information in Memory.\n\thttps://cwe.mitre.org/data/definitions/316.html"
                 },
                 {
                     "args":"-n",
-                    "keyword": ["setContentTitle", "setContentText"],
+                    "important_keyword": ["setContentTitle", "setContentText"],
+                    "keyword": ["NotificationManager", "setContentTitle", "setContentText"],
                     "description":"STORAGE-2: Determining Whether Sensitive Data Is Shared with Third Parties via Notifications --> NotificationManager",
-                    "note":"It is recommended that any sensitive data should not be notified via the push notifications, if observed.\nPlease note that, It would be necessary to understand how the application is generating the notifications and which data ends up being shown."
+                    "note":"Any sensitive data should not be notified via the push notifications.\n\tIt would be necessary to understand how the application is generating the notifications and which data ends up being shown.",
+                    "reference": "CWE-829: Inclusion of Functionality from Untrusted Control Sphere.\n\thttps://cwe.mitre.org/data/definitions/829.html"
                 },
                 {
                     "args":"-n",
-                    "keyword": ["Log.v(", "Log.d(", "Log.i(", "Log.w(", "Log.e(", "logger.log(", "logger.logp(", "log.info",  "System.out.print", "System.err.print"],
+                    "keyword": ["Log.v(", "Log.d(", "Log.i(", "Log.w(", "Log.e(", "logger.log(", "logger.logp(", "log.info",  "System.out.print", "System.err.print", "android.util.Log", "logfile", "logging", "logs"],
                     "description":"STORAGE-2: Testing Logs for Sensitive Data",
-                    "note":"It is recommended that any sensitive data should not be part of the log's output or revealed into Stacktraces, if observed."
+                    "note":"Logging statements should be removed from production releases unless deemed necessary to the application or explicitly identified as safe, e.g. as a result of a security audit..",
+                    "reference": "CWE-532: Insertion of Sensitive Information into Log File.\n\thttps://cwe.mitre.org/data/definitions/532.html"
                 }
             ]
         },
@@ -36,15 +42,17 @@
             "rules": [
                 {
                     "args":"-n",
-                    "keyword": ":inputType=",
-                    "description":"STORAGE-2: Testing Memory for Sensitve Data --> The Keyboard Cache",
-                    "note":"It is recommended to set the android input type as textNoSuggestions for any sensitive data, if observed."
+                    "keyword": [":inputType=\"textAutoComplete", ":inputType=\"textAutoCorrect"],
+                    "description":"STORAGE-2: Determining Whether the Keyboard Cache Is Disabled for Text Input Fields --> Keyboard Cache",
+                    "note":"Should set the android input type as 'textNoSuggestions' for any sensitive data..\n\tThe keyboard cache will not be shown when the input field is selected.\n\tThe user will have to type everything manually.",
+                    "reference": "CWE-524: Use of Cache Containing Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/524.html"
                 },
                 {
                     "args":"-n",
-                    "keyword": ":inputType=\"textPassword",
-                    "description":"STORAGE-2: Testing Memory for Sensitve Data --> The Sensitive Data Disclosure through the User Interface",
-                    "note":"It is recommended not to disclose any sensitive data such as password, card details, etc. in the clear-text format via User Interface. Make sure that the application is masking sensitive user input by using the inputType=\"textPassword\" attribute. It is useful to mitigate risks such as shoulder surfing."
+                    "keyword": [":inputType=\"textPassword",":inputType=\"textVisiblePassword", ":inputType=\"numberPassword",":inputType=\"textWebPassword"],
+                    "description":"STORAGE-2: Determining Whether the Keyboard Cache Is Disabled for Text Input Fields --> The Sensitive Data Disclosure through the User Interface",
+                    "note":"Should verify that none of the input types are being overwritten.",
+                    "reference": "CWE-524: Use of Cache Containing Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/524.html"
                 }
             ]
         },
@@ -55,7 +63,9 @@
                     "args":"-n",
                     "keyword": "android:allowBackup=\"true\"",
                     "description":"STORAGE-2: Testing Memory for Sensitve Data --> The allowBackup flag configuration",
-                    "note":"It is recommended not to enable the allowBackup flag, if observed.\nPlease note that, the enabled setting allows attackers to copy application data off of the device if they have enabled USB debugging."
+                    "note":"Should not enable the allowBackup flag and determine whether the app saves any kind of sensitive data.\n\tThe enabled setting allows attackers to copy application data off of the device if they have enabled USB debugging.",
+                    "note1": "android:allowBackup=\"true\" flag has not been observed in the AndroidManifest.xml file.",
+                    "reference": "CWE-921: Storage of Sensitive Data in a Mechanism without Access Control.\n\thttps://cwe.mitre.org/data/definitions/921.html"
                 }
             ]
         }

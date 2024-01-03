@@ -3,140 +3,15 @@
     "description": "The app performs identity pinning for all remote endpoints under the control of developers.",
     "data": [
         {
-            "target_file": "*.cer",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .cer",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
-            "target_file": "*.pem",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .pem",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
-            "target_file": "*.cert",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .cert",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
-            "target_file": "*.crt",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .crt",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
-            "target_file": "*.pub",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .pub",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
-            "target_file": "*.key",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .key",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
-            "target_file": "*.pfx",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .pfx",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
-            "target_file": "*.p12",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .p12",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
-            "target_file": "*.der",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .der",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
-            "target_file": "*.jks",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .jks",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
-            "target_file": "*.bks",
-            "rules": [
-                {
-                    "args":"-n",
-                    "keyword": "",
-                    "description":"NETWORK-2: Hard-coded Certificates/Key/Keystore files .bks",
-                    "note":" Hard-coded Certificates/Key/Keystore files have been identified, if observed.\nPlease note that, Attacker may bypass SSL Pinning by adding their proxy's certificate to the trusted keystore with the tool such as keytool."
-                }
-            ]
-        },
-        {
             "target_file": "*.xml",
             "rules": [
                 {
                     "args":"-n",
+                    "important_keyword": ["<pin-set", "<pin digest"],
                     "keyword": ["<pin-set", "<pin digest", "<domain", "<base"],
-                    "description":"NETWORK-2: Certificate Pinning settings",
-                    "note":"It is recommended to appropriately set the certificate pinning in the Network Security Configuration file, if observed.\nPlease note that, The expiration time and backup pins should be set."
-                },
-                {
-                    "args":"-n",
-                    "keyword": ["<certificates src=", "<domain", "<base"],
-                    "description":"NETWORK-2: Custom Trust Anchors",
-                    "note":"It is recommended that custom Trust Anchors such as <certificates src=user should be avoided, if observed. The <pin> should be set appropriately if it cannot be avoided.\nPlease note that, If the app will trust user-supplied CAs by using a custom Network Security Configuration with a custom trust anchor, the possibility of MITM attacks increases."
+                    "description":"NETWORK-2: Testing Custom Certificate Stores and Certificate Pinning --> Certificate Pinning settings",
+                    "note":"Should set the certificate pinning in the Network Security Configuration file carefully.\n\tCheck their expiration date, if any.\n\tIf expired, certificate pinning will be disabled for the affected domains.",
+                    "reference": "CWE-295: Improper Certificate Validation.\n\thttps://cwe.mitre.org/data/definitions/295.html"
                 }
             ]
         },
@@ -145,9 +20,10 @@
             "rules": [
                 {
                     "args":"-n",
-                    "keyword": ["certificatePinner", "KeyStore.getInstance", "trustManagerFactory", "Retrofit.Builder(", "Picasso.Builder("],
-                    "description":"NETWORK-2: Certificate Pinning settings",
-                    "note":"It is recommended to implement Certificate Pinning appropriately, if observed.\nPlease note that the application should use its own certificate store, or pins the endpoint certificate or public key. Further, it should not establish connections with endpoints that offer a different certificate or key, even if signed by a trusted CA."
+                    "keyword": ["certificatePinner", "KeyStore.getInstance", "trustManagerFactory"],
+                    "description":"NETWORK-2: Testing Custom Certificate Stores and Certificate Pinning --> Certificate Pinning implementation",
+                    "note":"Should implement Certificate Pinning carefully.\n\tThe application should use its own certificate store, or pins the endpoint certificate or public key.\n\tFurther, it should not establish connections with endpoints that offer a different certificate or key, even if signed by a trusted CA.",
+                    "reference":"CWE-295: Improper Certificate Validation.\n\thttps://cwe.mitre.org/data/definitions/295.html"
                 }
             ]   
         }

@@ -9,13 +9,29 @@
                     "args":"-n",
                     "keyword": [".getSerializable(", ".getSerializableExtra(", "new Gson()"],
                     "description":"CODE-4: Testing Object Persistence",
-                    "note":"It is recommended to use Serializable only when the serialized classes are stable, if observed.\nReflection-based persistence should be avoided as the attacker might be able to manipulate it to execute business logic."
+                    "note":"Should use Serializable only when the serialized classes are stable.\n\tReflection-based persistence should be avoided as the attacker might be able to manipulate it to execute business logic.",
+                    "reference": "CWE-502: Deserialization of Untrusted Data.\n\thttps://cwe.mitre.org/data/definitions/502.html"
                 },
                 {
                     "args":"-n",
                     "keyword": ["shouldOverrideUrlLoading(", "shouldInterceptRequest("],
-                    "description":"CODE-4: Testing for URL Loading in WebViews",
-                    "note":"It is recommended to implement custom URL handlers securely, if observed.\nPlease note that, Even if the attacker cannot bypass the checks on loading arbitrary URLs/domains, they may still be able to try to exploit the handlers."
+                    "description":"CODE-4: Testing for URL Loading in WebViews --> Check for Page Navigation Handling Override",
+                    "note":"Should implement custom URL handlers securely.\n\tEven if the attacker cannot bypass the checks on loading arbitrary URLs/domains, they may still be able to try to exploit the handlers.",
+                    "reference": "CWE-939: Improper Authorization in Handler for Custom URL Scheme.\n\thttps://cwe.mitre.org/data/definitions/939.html"
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["shouldOverrideUrlLoading(", "shouldInterceptRequest("],
+                    "description":"CODE-4: Testing for URL Loading in WebViews --> Check for EnableSafeBrowsing Disabled",
+                    "note":" EnableSafeBrowsing should be configured to true.",
+                    "reference": "CWE-940: Improper Verification of Source of a Communication Channel.\n\thttps://cwe.mitre.org/data/definitions/940.html"
+                },
+                {
+                    "args":"-n",
+                    "keyword": "SharedPreferences.Editor",
+                    "description":"STORAGE-1: Testing Local Storage for Input Validation",
+                    "note":"Input validation needs to be applied on the sensitive data the moment it is read back again.\n\tAny process can override the data for any publicly accessible data storage.",
+                    "reference": "CWE-922: Insecure Storage of Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/922.html"
                 }
             ]
         }

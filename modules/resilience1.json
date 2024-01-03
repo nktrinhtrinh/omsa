@@ -9,13 +9,17 @@
                     "args":"-n",
                     "keyword": ["supersu", "superuser", "/xbin/", "/sbin/"],
                     "description":"RESILIENCE-1: Testing Root Detection",
-                    "note":"It is recommended to implement root detection mechanisms in the application, if not observed.\nPlease note that, Multiple detection methods should be implemented so that it cannot be bypassed easily."
+                    "note":"It seems that root detection mechanism has been implemented.\n\tMultiple detection methods should be implemented.\n\tShould check it out manually as well for better clarity.",
+                    "note1": "Should implement root detection mechanisms in the application.\n\tMultiple detection methods should be implemented so that it cannot be bypassed easily.",
+                    "reference": "CWE-250: Execution with Unnecessary Privileges.\n\thttps://cwe.mitre.org/data/definitions/250.html"
                 },
                 {
                     "args":"-n",
                     "keyword": ["Build.MODEL.contains", "Build.MANUFACTURER.contains", "Build.HARDWARE.contains", "Build.PRODUCT.contains", "genyd"],
                     "description":"RESILIENCE-1: Testing Emulator Detection",
-                    "note":"It is recommended to implement Emulator detection mechanisms in the application, if not observed.\nPlease note that, Multiple detection methods should be implemented so that it cannot be bypassed easily."
+                    "note":"It seems that Emulator detection mechanism has been implemented.\n\tMultiple detection methods should be implemented.\n\tShould check it out manually as well for better clarity.",
+                    "note1":"Should implement Emulator detection mechanisms in the application.\n\tMultiple detection methods should be implemented so that it cannot be bypassed easily.",
+                    "reference": "CWE-693: Protection Mechanism Failure.\n\thttps://cwe.mitre.org/data/definitions/693.html"
                 }
             ]
         }

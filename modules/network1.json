@@ -9,37 +9,47 @@
                     "args":"-n",
                     "keyword": ["(HttpURLConnection)", "SSLCertificateSocketFactory.getInsecure("],
                     "description":"NETWORK-1: Testing Data Encryption on the Network --> Testing Network Requests over Secure Protocols",
-                    "note":"It is recommended not to use any unencrypted transmission mechanisms for sensitive data.\nPlease note that, the HTTP protocol does not provide any encryption of the transmitted data, which can be easily intercepted by an attacker."
+                    "note":"Should not use any unencrypted transmission mechanisms for sensitive data.\n\tThe HTTP protocol does not provide any encryption of the transmitted data, which can be easily intercepted by an attacker.",
+                    "reference": "CWE-319: Cleartext Transmission of Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/319.html"
                 },
                 {
                     "args":"-n",
+                    "important_keyword": "SSLSocket",
                     "keyword": ["SSLSocket", "getDefaultHostnameVerifier"],
                     "description":"NETWORK-1: Testing Data Encryption on the Network --> Testing Network API Usage",
-                    "note":"SSLSocket does not verify the hostname. Use getDefaultHostnameVerifier to verify the hostname."
+                    "note":"Even when using a low-level API which is supposed to make secure connections (such as SSLSocket), be aware that it has to be securely implemented.\n\tFor instance, SSLSocket does not verify the hostname. Use getDefaultHostnameVerifier to verify the hostname.",
+                    "reference": "CWE-319: Cleartext Transmission of Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/319.html"
                 },
                 {
                     "args":"-n",
-                    "keyword": [ "X509Certificate", "checkServerTrusted(", "checkClientTrusted(", "getAcceptedIssuers("],
+                    "important_keyword": ["checkServerTrusted(", "checkClientTrusted(", "getAcceptedIssuers("],
+                    "keyword": ["X509Certificate","checkServerTrusted(", "checkClientTrusted(", "getAcceptedIssuers("],
                     "description":"NETWORK-1: Testing Endpoint Identify Verification --> The Server Certificate verification",
-                    "note":"It is recommended to appropriately verify the Server Certificate, if observed.\nPlease note that, It should be signed by a trusted CA, not expired, not self-signed, etc.\nWhile implementing a custom X509TrustManager, the certificate chain needs to be verified appropriately, else the possibility of MITM attacks increases by providing an arbitrary certificate by an attacker."
+                    "note":"Should carefully verify the Server Certificate.\nIt should be signed by a trusted CA, not expired, not self-signed, etc.",
+                    "reference": "CWE-295: Improper Certificate Validation.\n\thttps://cwe.mitre.org/data/definitions/295.html"
                 },
                 {
                     "args":"-n",
+                    "important_keyword": "onReceivedSslError",
                     "keyword": ["onReceivedSslError", "sslErrorHandler", ".proceed(", "setWebViewClient", "findViewById"],
                     "description":"NETWORK-1: Testing Endpoint Identify Verification --> The WebView Server Certificate verification",
-                    "note":"The application seems to be implementing its own onReceivedSslError method, if observed.\nPlease note that, the application should appropriately verify the WebView Server Certificate implementation (such as having a call to the handler.cancel method).\nTLS certificate errors should not be ignored as the mobile browser performs the server certificate validation when a WebView is used."
+                    "note":"Should not ignoring any TLS error that occurs when the WebView tries to connect to the remote website.",
+                    "reference": "CWE-295: Improper Certificate Validation.\n\thttps://cwe.mitre.org/data/definitions/295.html"
                 },
                 {
                     "args":"-n",
                     "keyword": ["SSLContext.getInstance(", "tlsVersions(TlsVersion"],
                     "description":"NETWORK-1: Testing the TLS Settings",
-                    "note":"It is recommended to enforce TLS 1.2 as the minimum protocol version.\nPlease note that, Failure to do so could open the door to downgrade attacks such as DROWN/POODLE/BEAST etc."
+                    "note":"TLS v1.2 and TLS v1.3 are considered best practice for secure transmission of data.\n\tIf a mobile application connects to a specific server, its networking stack can be tuned to ensure the highest possible security level for the server’s configuration.\n\tLack of support in the underlying operating system may force the mobile application to use a weaker configuration.",
+                    "reference": "CWE-326: Inadequate Encryption Strength.\n\thttps://cwe.mitre.org/data/definitions/326.html"
                 },
                 {
                     "args":"-n",
                     "keyword": [" ProviderInstaller.installIfNeeded", " ProviderInstaller.installIfNeededAsync"],
                     "description":"NETWORK-1: Testing the Security Provider",
-                    "note":"It is recommended that applications based on the Android SDK should depend on GooglePlayServices, if not observed.\nPlease note that, The ProviderInstaller class is called with either installIfNeeded or installIfNeededAsync to prevent SSL exploits."
+                    "note":"It seems that the ProviderInstaller class is called with either installIfNeeded or installIfNeededAsync to prevent SSL exploits as Android relies on a security provider which comes with the device.",
+                    "note1":"Applications based on the Android SDK should depend on GooglePlayServices.\n\tThe ProviderInstaller class is called with either installIfNeeded or installIfNeededAsync to prevent SSL exploits.",
+                    "reference":"CWE-693: Protection Mechanism Failure.\n\thttps://cwe.mitre.org/data/definitions/693.html"
                 }
             ]
         },
@@ -50,7 +60,15 @@
                     "args":"-n",
                     "keyword": ["android:usesCleartextTraffic", "cleartextTrafficPermitted"],
                     "description":"NETWORK-1: Testing Data Encryption on the Network --> Testing Cleartext Traffic",
-                    "note":"It is recommended to set android:usesCleartextTraffic or cleartextTrafficPermitted to false.\nPlease note that, Sensitive information should be sent over secure channels only."
+                    "note":"Should set 'android:usesCleartextTraffic' or 'cleartextTrafficPermitted' to false, make ensure that the app is not allowing cleartext HTTP traffic Sensitive information should be sent over secure channels only.",
+                    "reference": "CWE-319: Cleartext Transmission of Sensitive Information.\n\thttps://cwe.mitre.org/data/definitions/319.html"
+                },
+                {
+                    "args":"-n",
+                    "keyword": ["<certificates src=", "<domain", "<base"],
+                    "description":"NETWORK-2: Testing Endpoint Identify Verification --> Custom Trust Anchors",
+                    "note":"Custom Trust Anchors such as <certificates src=user should be avoided.\n\tThe <pin> should be set carefully if it cannot be avoided.\n\tIf the app will trust user-supplied CAs by using a custom Network Security Configuration with a custom trust anchor, the possibility of MITM attacks increases.",
+                    "reference": "CWE-295: Improper Certificate Validation.\n\thttps://cwe.mitre.org/data/definitions/295.html"
                 }
             ]
         }

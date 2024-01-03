@@ -9,7 +9,9 @@
                     "args":"-n",
                     "keyword": ["isDebuggable", "isDebuggerConnected"],
                     "description":"RESILIENCE-4: Testing Anti-Debugging Detection",
-                    "note":"It is recommended to implement Anti-Debugging detection mechanisms in the application, if not observed.\nPlease note that, Multiple detection methods should be implemented so that it cannot be bypassed easily."
+                    "note":"It seems that Anti-Debugging detection mechanism has been implemented.\n\tMultiple detection methods should be implemented.\n\tShould check it out manually as well for better clarity.",
+                    "note1": "Should implement Anti-Debugging detection mechanisms in the application.\n\tMultiple detection methods should be implemented so that it cannot be bypassed easily.",
+                    "reference": "CWE-693: Protection Mechanism Failure.\n\thttps://cwe.mitre.org/data/definitions/693.html"
                 }
             ]
         },
@@ -20,7 +22,9 @@
                     "args":"-n",
                     "keyword": "android:debuggable=\"true\"",
                     "description":"RESILIENCE-4: Testing Anti-Debugging Detection",
-                    "note":"It is recommended not to enable the debuggable flag, if observed.\nPlease note that, the enabled setting allows attackers to obtain access to sensitive information, control the application flow, etc."
+                    "note":"Should not enable the debuggable flag.\n\tThe enabled setting allows attackers to obtain access to sensitive information, control the application flow, etc.",
+                    "note1": "android:debuggable=\"true\" flag has not been observed in the AndroidManifest.xml file.",
+                    "reference": "CWE-215: Insertion of Sensitive Information Into Debugging Code.\n\thttps://cwe.mitre.org/data/definitions/215.html"
                 }
             ]
         }

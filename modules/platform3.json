@@ -9,13 +9,16 @@
                     "args":"-n",
                     "keyword": "FLAG_SECURE",
                     "description":"PLATFORM-3: Finding Sensitive Information in Auto-Generated Screenshots",
-                    "note":"It is recommended to set the FLAG_SECURE option to protect from Auto-Generated Screenshots issue.\nPlease note that, When the application goes into background, a screenshot of the current activity is taken which may leak sensitive information."
+                    "note":"Should set the FLAG_SECURE option to protect from Auto-Generated Screenshots issue.\n\tWhen the application goes into background, a screenshot of the current activity is taken which may leak sensitive information.",
+                    "reference": "CWE-200: Exposure of Sensitive Information to an Unauthorized Actor.\n\thttps://cwe.mitre.org/data/definitions/200.html"
                 },
                 {
                     "args":"-n",
                     "keyword": ":inputType=\"textPassword",
                     "description":"PLATFORM-3: Checking for Sensitive Data Disclosure Through the User Interface",
-                    "note":"It is recommended not to disclose any sensitive data such as password, card details, etc. in the clear-text format via User Interface.\nMake sure that the application is masking sensitive user input by using the inputType=\"textPassword\" attribute. It is useful to mitigate risks such as shoulder surfing."
+                    "note1":"Should not disclose any sensitive data such as password, card details, etc. in the clear-text format via User Interface.\n\tMake sure that the application is masking sensitive user input by using the inputType=\"textPassword\" attribute.",
+                    "note": "It seems that the application has implemented inputType=\"textPassword\" attribute to hide the certain information.\n\tMake sure that the application is not disclosing any sensitive data such as password, card details, etc. in the clear-text format via User Interface.",
+                    "reference": "CWE-359: Exposure of Private Personal Information to an Unauthorized Actor.\n\thttps://cwe.mitre.org/data/definitions/359.html"
                 }
             ]
         }

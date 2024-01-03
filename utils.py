@@ -14,6 +14,8 @@ color_blue_bold = "\033[1;34m"
 color_cyan = "\033[36m"
 color_cyan_bold = "\033[1;36m"
 color_purple = "\033[1;35m"
+color_green = "\033[32m"
+color_green_bold = "\033[1;32m" 
 
 def no_color():
     global color_reset, color_red, color_red_bold, color_brown, color_blue, color_blue_bold, color_cyan, color_cyan_bold, color_purple

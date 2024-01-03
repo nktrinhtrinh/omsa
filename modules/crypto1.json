@@ -9,37 +9,45 @@
                     "args":"-n",
                     "keyword": ["new Random(", "SHA1PRNG", "Dual_EC_DRBG"],
                     "description":"CRYPTO-1: Testing Random Number Generation -->  Weak Random",
-                    "note":"It is recommended to use Pseudo-random number generators along-with 256-bit seed for producing a random-enough number, if observed.\nPlease note that, Under certain conditions this weakness may expose mobile application data encryption or other protection based on randomization."
+                    "note":"Should use Pseudo-random number generators along-with 128-bit seed for producing a random-enough number.\n\tOnce an attacker knows what type of weak pseudo-random number generator (PRNG) is used, it can be trivial to write a proof-of-concept to generate the next random value based on previously observed ones.",
+                    "reference": "CWE-330: Use of Insufficiently Random Values.\n\thttps://cwe.mitre.org/data/definitions/330.html"
                 },
                 {
                     "args":"-n",
-                    "keyword": ["java.security.SecureRandom","SecureRandom()","secureRandom."],
-                    "description":"CRYPTO-1: Testing Random Number Generation --> Insecure SecureRandom",
-                    "note":"ehe"
+                    "keyword": ["KeyGenParameterSpec", "KeyPairGeneratorSpec", "KeyPairGenerator", "KeyGenerator", "KeyProperties"],
+                    "description":"CRYPTO-1: Testing Symmetric Cryptography --> Symmetric Keys",
+                    "note":"For each identified instance verify if the used symmetric keys:\n\t - are not part of the application resources\n\t - cannot be derived from known values\n\t - are not hardcoded in code",
+                    "reference": "CWE-326: Inadequate Encryption Strength.\n\thttps://cwe.mitre.org/data/definitions/326.html"
                 },
                 {
                     "args":"-n",
-                    "keyword": [" SecretKeySpec(", "IvParameterSpec("],
-                    "description":"CRYPTO-1: Testing Symmetric Cryptography",
-                    "note":"It is recommended to verify that hardcoded symmetric keys are not used in security-sensitive contexts as the only method of encryption, if observed.\nPlease note that, the used symmetric keys are not part of the application resources, cannot be derived from known values, and are not hardcoded in code."
+                    "keyword": [" SecretKeySpec(", "IvParameterSpec(", "byte[]"],
+                    "description":"CRYPTO-1: Testing Symmetric Cryptography --> Hardcoded Symmetric Keys",
+                    "note":"Should verify that hardcoded symmetric keys are not used in security-sensitive contexts as the only method of encryption.\n\tThe used symmetric keys are not part of the application resources, cannot be derived from known values, and are not hardcoded in code.",
+                    "reference": "CWE-321: Use of Hard-coded Cryptographic Key.\n\thttps://cwe.mitre.org/data/definitions/321.html"
                 },
                 {
                     "args":"-n",
                     "keyword": ["Signature.getInstance", "MessageDigest.getInstance", "Mac.getInstance"],
                     "description":"CRYPTO-1: Testing the Configuration of Cryptographic Standard Algorithms --> The Insecure/Deprecated Cryptographic Algorithms",
-                    "note":"It is recommended that cryptographic algorithms used in the application are up to date and in-line with industry standards.\nPlease note that, Vulnerable algorithms include outdated block ciphers (such as DES, DESede, and 3DES), stream ciphers (such as RC4), hash functions (such as MD5 and SHA1), and broken random number generators (such as Dual_EC_DRBG and SHA1PRNG)."
+                    "note":"Cryptographic algorithms used in the application are up to date and in-line with industry standards.\n\tVulnerable algorithms include outdated block ciphers (such as DES, DESede, and 3DES), stream ciphers (such as RC4), hash functions (such as MD5 and SHA1), and broken random number generators (such as Dual_EC_DRBG and SHA1PRNG).",
+                    "reference": "CWE-327: Use of a Broken or Risky Cryptographic Algorithm.\n\thttps://cwe.mitre.org/data/definitions/327.html"
                 },
                 {
                     "args":"-n",
-                    "keyword": "Cipher.getInstance",
+                    "important_keyword":"Cipher.getInstance",
+                    "keyword": ["Cipher.getInstance", "None", "ECB", "CBC", "PKCS1Padding", "AES", "DES", "RC4"],
                     "description":"CRYPTO-1: Testing the Configuration of Cryptographic Standard Algorithms --> The Insecure/Weak Cipher Modes",
-                    "note":"It is recommended to use a block mode that protects the integrity of the stored data, such as Galois/Counter Mode (GCM).\nPlease note that, the ECB and CBC modes provide confidentiality, but other modes such as Galois Counter Mode (GCM) provides both confidentiality and integrity protection."
+                    "note":"Should use a block mode that protects the integrity of the stored data, such as Galois/Counter Mode (GCM).\n\tThe ECB and CBC modes provide confidentiality, but other modes such as Galois Counter Mode (GCM) provides both confidentiality and integrity protection.",
+                    "reference": "CWE-649: Reliance on Obfuscation or Encryption of Security-Relevant Inputs without Integrity Checking.\n\thttps://cwe.mitre.org/data/definitions/649.html"
                 },
                 {
                     "args":"-n",
-                    "keyword": [" = {0, 0, 0, 0, 0", " = {1, 2, 3, 4, 5", " = {0, 1, 2, 3, 4"],
+                    "important_keyword": "byte[]",
+                    "keyword": [" = {0, 0, 0, 0, 0", " = {1, 2, 3, 4, 5", " = {0, 1, 2, 3, 4", "byte[]"],
                     "description":"CRYPTO-1: Testing the Configuration of Cryptographic Standard Algorithms --> The Static IVs",
-                    "note":"It is recommended not to use Static IVs for any sensitive data, if observed.\nPlease note that, Cryptographic keys should not be kept in the source code and IVs must be regenerated for each message to be encrypted."
+                    "note":"Should not use Static IVs for any sensitive data.\n\tCryptographic keys should not be kept in the source code and IVs must be regenerated for each message to be encrypted.",
+                    "reference": "CWE-1204: Generation of Weak Initialization Vector (IV).\n\thttps://cwe.mitre.org/data/definitions/1204.html"
                 }
             ]
         }
